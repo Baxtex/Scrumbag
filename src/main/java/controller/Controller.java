@@ -19,21 +19,15 @@ public class Controller {
 
 	public JSONObject login(String username, String password, Response res) {
 		res.type("application/json");
-		System.out.println("Here we go...");
-		System.out.println(username);
-		System.out.println(password);
-		String key = createKey(username, password);
+		String key = "abc";
 		JSONObject jObj = new JSONObject();
 		try {
-			System.out.println("inside try..");
-			if (key != null) {
-				System.out.println("here is the key");
+			if (username.equals("invalid")) {
+				jObj.put(MSG, "user does not exist");
+				res.status(404);
+			} else {
 				jObj.put("key", key);
 				res.status(200);
-			} else {
-				System.out.println("Does not exist.");
-				jObj.put(MSG, "user does not exist.");
-				res.status(404);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,15 +35,14 @@ public class Controller {
 		return jObj;
 	}
 
-	@SuppressWarnings("unused")
 	public JSONObject logout(String key, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
-			if (true) {
+			if (key.equals("abc")) {
 				jObj.put(MSG, "user logged out");
 				res.status(200);
 			} else {
-				jObj.put(MSG, "user does not exist.");
+				jObj.put(MSG, "user does not exist");
 				res.status(401);
 			}
 		} catch (Exception e) {
@@ -85,21 +78,20 @@ public class Controller {
 
 	private boolean checkAuthority(String key) {
 		// TODO implement this.
-		return true;
+		if (key.equals("12345")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean createUser(String username, String password) {
 		// TODO implement this.
-		return true;
-	}
-	
-	private String createKey(String username, String password) {
-		// TODO implement this.
-		if(username.equals("inval")) {
-			System.out.println("invalid!");
-			return null;
-		}
-		return "abc";
-	}
 
+		if (username.equals("invalid")) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
