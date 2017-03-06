@@ -1,25 +1,39 @@
 package api;
 
-import static spark.Spark.get;
+import static spark.Spark.post;
 
 import org.codehaus.jettison.json.JSONObject;
 
+import controller.Controller;
+
 public class ApiV1 {
+	private Controller contrl = new Controller();
 	// Good tutorial: https://dzone.com/articles/building-simple-restful-api
+	// Good rest client software https://insomnia.rest/download/#windows
+	// The URL for this is: http://localhost:4567/	
+
 	public static void main(String[] args) {
-		// The URL for this is: http://localhost:4567/hello
-		get("/hello", (req, res) -> "Hello World!");
-		get("/helloAgain", (req, res) -> "Hello Again!");
+		new ApiV1();
+	}
 
-		// Create Json object and return it.
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("message", "Hello Json!");
-			jsonObject.put("antoher message", "Hello again Json!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public ApiV1() {
+		setupEndpoints();
+	}
 
-		get("/helloJson", (req, res) -> jsonObject);
+	/**
+	 * Setups all the endpoints for the API.
+	 */
+	private void setupEndpoints() {
+
+		/**
+		 * POST
+		 */
+		post("/login", (req, res) -> {
+			JSONObject json = contrl.login(req.params(":username"), req.params(":password"));
+			res.type("application/json");
+			int statCode = (json.has("key")) ? 200 : 401;
+			res.status(statCode);
+			return json;
+		});
 	}
 }
