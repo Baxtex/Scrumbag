@@ -4,7 +4,7 @@ import static spark.Spark.*;
 
 import controller.Controller;
 
-// The URL for this is: http://localhost:4567/
+// The URI for this is: http://localhost:4567/
 public class ApiV1 {
 	private Controller ctrl = new Controller();
 
@@ -34,9 +34,15 @@ public class ApiV1 {
 
 		post("/user/:key", (req, res) -> ctrl.createUser(req.queryParams("username"), req.queryParams("password"),
 				req.params(":key"), res));
+
+		post("/project/:key",
+				(req, res) -> ctrl.createProject(req.params(":key"), req.queryParams("project-name"), res));
+
 		/**
 		 * PUT endpoints
 		 */
+		put("/project/:key", (req, res) -> ctrl.userManagement(req.params(":key"), req.queryParams("project-id"),
+				req.queryParams("action"), req.queryParams("user-ids"), res));//TODO no tests yet.
 
 		/**
 		 * DELETE endpoints

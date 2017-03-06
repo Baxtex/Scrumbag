@@ -10,6 +10,8 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class TestApiV1 {
+	private final String ADMINKEY = "12345";
+
 	@Test
 	public void testValidLogin1() {
 		try {
@@ -62,9 +64,9 @@ public class TestApiV1 {
 	@Test
 	public void testValidCreateUser1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/12345")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/" + ADMINKEY)
 					.header("accept", "application/json").field("username", "a").field("password", "ab").asJson();
-			assertEquals("{\"message\":\"user created\"}", jsonResponse.getBody().toString());
+			assertEquals("{\"user-id\":\"XXX\"}", jsonResponse.getBody().toString());
 			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
 		} catch (UnirestException e) {
 			e.printStackTrace();
@@ -74,7 +76,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidCreateUser1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/12345")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/" + ADMINKEY)
 					.header("accept", "application/json").field("username", "invalid").field("password", "ab").asJson();
 			assertEquals("{\"message\":\"not allowed\"}", jsonResponse.getBody().toString());
 			assertEquals("403", String.valueOf(jsonResponse.getStatus()));
@@ -90,6 +92,55 @@ public class TestApiV1 {
 					.header("accept", "application/json").field("username", "a").field("password", "ab").asJson();
 			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
 			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testValidCreateProject1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/" + ADMINKEY)
+					.header("accept", "application/json").field("project-name", "project1").asJson();
+			assertEquals("{\"project-id\":\"XXX\"}", jsonResponse.getBody().toString());
+			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidCreateProject1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/" + ADMINKEY)
+					.header("accept", "application/json").field("project-name", "invalid").asJson();
+			assertEquals("{\"message\":\"not allowed\"}", jsonResponse.getBody().toString());
+			assertEquals("403", String.valueOf(jsonResponse.getStatus()));
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidCreateProject2() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/dsklfjdlsfj")
+					.header("accept", "application/json").field("project-name", "project1").asJson();
+			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test //TODO WIP.
+	public void testValidUserManagement1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/" + ADMINKEY)
+					.header("accept", "application/json").field("project-id", "project1").field("action", "add users")
+					.field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}").asJson();
+			assertEquals("{\"project-id\":\"XXX\"}", jsonResponse.getBody().toString());
+			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}

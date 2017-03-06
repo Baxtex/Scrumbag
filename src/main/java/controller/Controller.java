@@ -1,5 +1,6 @@
 package controller;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import spark.Response;
@@ -58,7 +59,9 @@ public class Controller {
 
 			if (checkAuthority(key)) {
 				if (createUser(username, password)) {
-					jObj.put(MSG, "user created");
+					jObj.put("user-id", "XXX"); // TODO Not sure what this
+												// should return, what is
+												// "user-id"?
 					res.status(201);
 				} else {
 					jObj.put(MSG, "not allowed");
@@ -94,4 +97,90 @@ public class Controller {
 			return true;
 		}
 	}
+
+	public JSONObject createProject(String key, String projectName, Response res) {
+		JSONObject jObj = new JSONObject();
+		try {
+			if (checkAuthority(key)) {
+				if (projectName.equals("invalid")) {
+					jObj.put(MSG, "not allowed");
+					res.status(403);
+				} else {
+					jObj.put("project-id", "XXX");
+					res.status(201);
+				}
+			} else {
+				jObj.put(MSG, "key does not exist");
+				res.status(401);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		res.type("application/json");
+		return jObj;
+	}
+
+	public Object userManagement(String key, String projectID, String action, String userIDs, Response res) {
+		JSONObject jObj = new JSONObject();
+		try {
+			JSONObject jObjUserIDs = new JSONObject(userIDs);
+
+			if (checkAuthority(key)) {
+				if (projectID.equals("invalid")) {
+					jObj.put(MSG, "not allowed");
+					res.status(403);
+				} else {
+					if (action.equals("add users")) {
+						if(addUsers(jObjUserIDs)) {
+							jObj.put(MSG, "users added");
+							res.status(200);
+						}else {
+							jObj.put(MSG, "invalid user names");
+							res.status(404);
+						}
+					} else if (action.equals("remove users")) {
+						if(removeUsers(jObjUserIDs)) {
+							jObj.put(MSG, "users removed");
+							res.status(200);
+						}else {
+							jObj.put(MSG, "invalid user names");
+							res.status(404);
+						}
+					} else {
+						jObj.put(MSG, "invalid action");
+						res.status(403);
+					}
+				}
+			} else {
+				jObj.put(MSG, "key does not exist");
+				res.status(401);
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jObj;
+	}
+
+	private boolean addUsers(JSONObject jsonObjUsers) {
+		System.out.println(jsonObjUsers.toString());
+		//TODO: Maybe loop all user names and check them to the db. If they don't exist, return false
+		boolean allNamesExist = true;
+		
+		return allNamesExist;
+				
+				
+				
+	}
+
+	private boolean removeUsers(JSONObject jsonObjUsers) {
+		System.out.println(jsonObjUsers.toString());
+		//TODO: Maybe loop all user names and check them to the db. If they don't exist, return false
+		boolean allNamesExist = true;
+		
+		return allNamesExist;
+
+	}
+
 }
