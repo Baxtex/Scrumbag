@@ -72,7 +72,7 @@ public class TestApiV1 {
 	public void testValidCreateUser1() {
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/validAdminKey")
-					.header("accept", "application/json").field("username", "a").field("password", "ab").asJson();
+					.header("accept", "application/json").field("username", "valid").field("password", "valid").asJson();
 
 			assertEquals("{\"user-id\":\"XXX\"}", jsonResponse.getBody().toString());
 			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
@@ -350,18 +350,124 @@ public class TestApiV1 {
 			e.printStackTrace();
 		}
 	}
-//HERE
+
 	@Test
 	public void testValidGetActivity1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.get("http://localhost:4567/activity/validActivityId/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.get("http://localhost:4567/activity/validActivityId/validUserKey")
 					.header("accept", "application/json").asJson();
 
-			assertEquals("{\"additional-time\":\"xxx\",\"sprint-id\":\"xxx\",\"user-id\":\"xxx\",\"description\":\"xxx\",\"expected-time\":\"xxx\",\"activity-id\":\"xxx\",\"project-id\":\"xxx\",\"title\":\"xxx\",\"priority\":\"xxx\",\"status\":\"xxx\"}", jsonResponse.getBody().toString());
+			assertEquals(
+					"{\"additional-time\":\"xxx\",\"sprint-id\":\"xxx\",\"user-id\":\"xxx\",\"description\":\"xxx\",\"expected-time\":\"xxx\",\"activity-id\":\"xxx\",\"project-id\":\"xxx\",\"title\":\"xxx\",\"priority\":\"xxx\",\"status\":\"xxx\"}",
+					jsonResponse.getBody().toString());
 			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
 
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}
 	}
+
+	@Test
+	public void testInvalidGetActivity1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.get("http://localhost:4567/activity/validActivityId/invalidKey")
+					.header("accept", "application/json").asJson();
+
+			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidGetActivity2() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.get("http://localhost:4567/activity/invalidActivityId/validUserKey")
+					.header("accept", "application/json").asJson();
+
+			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testValidEditActivity1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validUserKey")
+					.header("accept", "application/json").field("activity-id", "validActivityId")
+					.field("project-id", "validProjectId").field("title", "short description")
+					.field("description", "long description").field("status", "planned").field("priority", "high")
+					.field("expected-time", "12:00").field("additional-time", "15:00")
+					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
+
+			assertEquals("{\"message\":\"activity changed\"}", jsonResponse.getBody().toString());
+			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidEditActivity1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/invalidKey")
+					.header("accept", "application/json").field("activity-id", "validActivityId")
+					.field("project-id", "ValidProjectId").field("title", "short description")
+					.field("description", "long description").field("status", "planned").field("priority", "high")
+					.field("expected-time", "12:00").field("additional-time", "15:00")
+					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
+
+			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidEditActivity2() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validUserKey")
+					.header("accept", "application/json").field("activity-id", "invalidActivityId")
+					.field("project-id", "validProjectId").field("title", "short description")
+					.field("description", "long description").field("status", "planned").field("priority", "high")
+					.field("expected-time", "12:00").field("additional-time", "15:00")
+					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
+
+			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidEditActivity3() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validUserKey")
+					.header("accept", "application/json").field("activity-id", "validActivityId")
+					.field("project-id", "invalidProjectId").field("title", "short description")
+					.field("description", "long description").field("status", "planned").field("priority", "high")
+					.field("expected-time", "12:00").field("additional-time", "15:00")
+					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
+
+			assertEquals("{\"message\":\"project does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

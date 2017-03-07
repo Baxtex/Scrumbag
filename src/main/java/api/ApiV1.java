@@ -4,9 +4,9 @@ import static spark.Spark.*;
 
 import controller.Controller;
 
-// The URI for this is: http://localhost:4567/
+// Base URI is: http://localhost:4567/
 public class ApiV1 {
-	private Controller ctrl = new Controller();
+	private final Controller ctrl = new Controller();
 
 	public static void main(String[] args) {
 		new ApiV1();
@@ -53,8 +53,18 @@ public class ApiV1 {
 		put("/project/:key", (req, res) -> ctrl.userManagement(req.params(":key"), req.queryParams("project-id"),
 				req.queryParams("action"), req.queryParams("user-ids"), res));
 
+		put("/activity/:key", (req, res) -> ctrl.editActivity(req.params(":key"), req.queryParams("activity-id"),
+				req.queryParams("project-id"), req.queryParams("title"), req.queryParams("description"),
+				req.queryParams("status"), req.queryParams("priority"), req.queryParams("expected-time"),
+				req.queryParams("additional-time"), req.queryParams("sprint-id"), req.queryParams("user-id"), res));
+
 		/**
 		 * DELETE endpoints
 		 */
+
+		// Not sure about the parameters here yet.
+		// put("/activity/:activity-id/:key", (req, res) ->
+		// ctrl.deleteActivity(req.params(":activity-id"), req.params(":key"),
+		// res));
 	}
 }
