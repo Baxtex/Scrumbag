@@ -24,10 +24,16 @@ public class ApiV1 {
 		/**
 		 * GET endpoints
 		 */
+		get("/activities/:project-id/:key",
+				(req, res) -> ctrl.getActivities(req.params(":project-id"), req.params(":key"), res));
+
+		get("/activity/:activity-id/:key",
+				(req, res) -> ctrl.getActivity(req.params(":activity-id"), req.params(":key"), res));
 
 		/**
 		 * POST endpoints
 		 */
+
 		post("/login", (req, res) -> ctrl.login(req.queryParams("username"), req.queryParams("password"), res));
 
 		post("/logout/:key", (req, res) -> ctrl.logout(req.params(":key"), res));
@@ -38,11 +44,14 @@ public class ApiV1 {
 		post("/project/:key",
 				(req, res) -> ctrl.createProject(req.params(":key"), req.queryParams("project-name"), res));
 
+		post("/sprint/:key", (req, res) -> ctrl.createSprint(req.params(":key"), req.queryParams("project-id"),
+				req.queryParams("title"), req.queryParams("index"), res));
 		/**
 		 * PUT endpoints
 		 */
+
 		put("/project/:key", (req, res) -> ctrl.userManagement(req.params(":key"), req.queryParams("project-id"),
-				req.queryParams("action"), req.queryParams("user-ids"), res));//TODO no tests yet.
+				req.queryParams("action"), req.queryParams("user-ids"), res));
 
 		/**
 		 * DELETE endpoints
