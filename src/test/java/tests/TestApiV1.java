@@ -8,7 +8,11 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
+/**
+ * Test methods that test the public web api with requests.
+ * @author station
+ *
+ */
 public class TestApiV1 {
 
 	@Test
@@ -72,7 +76,8 @@ public class TestApiV1 {
 	public void testValidCreateUser1() {
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/validAdminKey")
-					.header("accept", "application/json").field("username", "valid").field("password", "valid").asJson();
+					.header("accept", "application/json").field("username", "valid").field("password", "valid")
+					.asJson();
 
 			assertEquals("{\"user-id\":\"XXX\"}", jsonResponse.getBody().toString());
 			assertEquals("201", String.valueOf(jsonResponse.getStatus()));

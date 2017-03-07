@@ -5,6 +5,12 @@ import org.codehaus.jettison.json.JSONObject;
 
 import spark.Response;
 
+/**
+ * This class handles the buissness logic of the system.
+ * 
+ * @author station
+ *
+ */
 public class Controller {
 
 	private final String MSG = "message";
@@ -30,7 +36,6 @@ public class Controller {
 				jObj.put(MSG, "key does not exist");
 				res.status(401);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,7 +129,6 @@ public class Controller {
 				jObj.put(MSG, "key does not exist");
 				res.status(401);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -147,7 +151,6 @@ public class Controller {
 				jObj.put(MSG, "key does not exist");
 				res.status(401);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -186,7 +189,6 @@ public class Controller {
 		JSONObject jObj = new JSONObject();
 		try {
 			JSONObject jObjUserIDs = new JSONObject(userIDs);
-
 			if (checkIfAdmin(key)) {
 				if (checkProjectId(pID)) {
 					if (action.equals("add users")) {
@@ -217,7 +219,6 @@ public class Controller {
 				jObj.put(MSG, "key does not exist");
 				res.status(401);
 			}
-
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -244,7 +245,6 @@ public class Controller {
 					jObj.put(MSG, "project does not exist");
 					res.status(404);
 				}
-
 			} else {
 				jObj.put(MSG, "key does not exist");
 				res.status(401);
@@ -313,7 +313,7 @@ public class Controller {
 		// TODO: Maybe loop all user names and check them to the db. If they
 		// don't exist, return false
 
-		String invalid = null;
+		String invalid = "";
 		try {
 			invalid = jsonObjUsers.getString("name");
 		} catch (JSONException e) {
@@ -329,7 +329,7 @@ public class Controller {
 	private boolean removeUsers(JSONObject jsonObjUsers) {
 		// TODO: Maybe loop all user names and check them to the db. If they
 		// don't exist, return false
-		String invalid = null;
+		String invalid = "";
 		try {
 			invalid = jsonObjUsers.getString("name");
 		} catch (JSONException e) {

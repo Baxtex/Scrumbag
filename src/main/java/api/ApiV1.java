@@ -4,7 +4,14 @@ import static spark.Spark.*;
 
 import controller.Controller;
 
-// Base URI is: http://localhost:4567/
+/**
+ * This class is the interface of the rest api. It routes the request and
+ * extrats the correct parameters and pass them to the Controller for further
+ * processing. Base URI is: http://localhost:4567/
+ * 
+ * @author Anton
+ *
+ */
 public class ApiV1 {
 	private final Controller ctrl = new Controller();
 
@@ -13,27 +20,27 @@ public class ApiV1 {
 	}
 
 	public ApiV1() {
-		setupEndpoints();
+		setupGetEndpoints();
+		setupPostEndpoints();
+		setupPutEndpoints();
+		setupDeleteEndpoints();
 	}
 
 	/**
-	 * Setups all the endpoints for the API.
+	 * Initializes routes for get requests.
 	 */
-	private void setupEndpoints() {
-
-		/**
-		 * GET endpoints
-		 */
+	private void setupGetEndpoints() {
 		get("/activities/:project-id/:key",
 				(req, res) -> ctrl.getActivities(req.params(":project-id"), req.params(":key"), res));
 
 		get("/activity/:activity-id/:key",
 				(req, res) -> ctrl.getActivity(req.params(":activity-id"), req.params(":key"), res));
+	}
 
-		/**
-		 * POST endpoints
-		 */
-
+	/**
+	 * Initializes routes for post requests.
+	 */
+	private void setupPostEndpoints() {
 		post("/login", (req, res) -> ctrl.login(req.queryParams("username"), req.queryParams("password"), res));
 
 		post("/logout/:key", (req, res) -> ctrl.logout(req.params(":key"), res));
@@ -46,10 +53,12 @@ public class ApiV1 {
 
 		post("/sprint/:key", (req, res) -> ctrl.createSprint(req.params(":key"), req.queryParams("project-id"),
 				req.queryParams("title"), req.queryParams("index"), res));
-		/**
-		 * PUT endpoints
-		 */
+	}
 
+	/**
+	 * Initializes routes for put requests.
+	 */
+	private void setupPutEndpoints() {
 		put("/project/:key", (req, res) -> ctrl.userManagement(req.params(":key"), req.queryParams("project-id"),
 				req.queryParams("action"), req.queryParams("user-ids"), res));
 
@@ -57,12 +66,13 @@ public class ApiV1 {
 				req.queryParams("project-id"), req.queryParams("title"), req.queryParams("description"),
 				req.queryParams("status"), req.queryParams("priority"), req.queryParams("expected-time"),
 				req.queryParams("additional-time"), req.queryParams("sprint-id"), req.queryParams("user-id"), res));
+	}
 
-		/**
-		 * DELETE endpoints
-		 */
-
-		// Not sure about the parameters here yet.
+	/**
+	 * Initializes routes for delete requests. TODO: Not yet implemented,
+	 * specification is lacking.
+	 */
+	private void setupDeleteEndpoints() {
 		// put("/activity/:activity-id/:key", (req, res) ->
 		// ctrl.deleteActivity(req.params(":activity-id"), req.params(":key"),
 		// res));
