@@ -8,8 +8,10 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
 /**
  * Test methods that test the public web api with requests.
+ * 
  * @author station
  *
  */
@@ -475,4 +477,48 @@ public class TestApiV1 {
 		}
 	}
 
+	@Test
+	public void testValidDelete1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.delete("http://localhost:4567/activity/validActivityId/validUserKey")
+					.header("accept", "application/json").asJson();
+
+			assertEquals("{\"message\":\"activity deleted\"}", jsonResponse.getBody().toString());
+			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testinValidDelete1() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.delete("http://localhost:4567/activity/validActivityId/invalidUserKey")
+					.header("accept", "application/json").asJson();
+
+			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testinValidDelete2() {
+		try {
+			HttpResponse<JsonNode> jsonResponse = Unirest
+					.delete("http://localhost:4567/activity/invalidActivityId/validUserKey")
+					.header("accept", "application/json").asJson();
+
+			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
+
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+	}
 }
