@@ -1,9 +1,4 @@
 package securityDB;
 
-// Representing an actual database. Stubbe!
-//
-// This database holds current sessions, as well as all registered usernames with passwords and authorities
-
-public class SecurityDB {
-
-}
+//This is a stub Representing an actual database containing the system's data about users, username, password and keys.
+public class SecurityDB {}

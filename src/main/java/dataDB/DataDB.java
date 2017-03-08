@@ -1,7 +1,3 @@
 package dataDB;
-
-// Representing an actual database. Stubbe!
-
-public class DataDB {
-
-}
+// This is a stub Representing an actual database containing the system's data about sprints, activites and projects.
+public class DataDB {}
