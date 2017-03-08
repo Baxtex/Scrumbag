@@ -66,7 +66,7 @@ public class TestApiV1 {
 			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/logout/invalidKey")
 					.header("accept", "application/json").asJson();
 
-			assertEquals("{\"message\":\"user does not exist\"}", jsonResponse.getBody().toString());
+			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
 			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
 
 		} catch (UnirestException e) {
@@ -77,7 +77,7 @@ public class TestApiV1 {
 	@Test
 	public void testValidCreateUser1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/validKey")
 					.header("accept", "application/json").field("username", "valid").field("password", "valid")
 					.asJson();
 
@@ -92,7 +92,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidCreateUser1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/user/validKey")
 					.header("accept", "application/json").field("username", "invalid").field("password", "ab").asJson();
 
 			assertEquals("{\"message\":\"not allowed\"}", jsonResponse.getBody().toString());
@@ -120,8 +120,8 @@ public class TestApiV1 {
 	@Test
 	public void testValidCreateProject1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/validAdminKey")
-					.header("accept", "application/json").field("project-name", "project1").asJson();
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/validKey")
+					.header("accept", "application/json").field("project-name", "validActivityName").asJson();
 
 			assertEquals("{\"project-id\":\"XXX\"}", jsonResponse.getBody().toString());
 			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
@@ -134,7 +134,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidCreateProject1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-name", "invalid").asJson();
 
 			assertEquals("{\"message\":\"not allowed\"}", jsonResponse.getBody().toString());
@@ -162,7 +162,7 @@ public class TestApiV1 {
 	@Test
 	public void testValidAddUserManagementAndActionAndProjectName1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-id", "validProjectId")
 					.field("action", "add users").field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}")
 					.asJson();
@@ -178,7 +178,7 @@ public class TestApiV1 {
 	@Test
 	public void testValidRemoveUserManagementAndActionAndProjectName1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-id", "validProjectId")
 					.field("action", "remove users").field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}")
 					.asJson();
@@ -194,7 +194,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidAddUserManagement1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-id", "validProjectId")
 					.field("action", "add users").field("user-ids", "{\"name\":\"invalid\", \"name\":\"invalid\"}")
 					.asJson();
@@ -210,7 +210,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidRemoveUserManagement1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-id", "validProjectId")
 					.field("action", "remove users").field("user-ids", "{\"name\":\"invalid\", \"name\":\"invalid\"}")
 					.asJson();
@@ -226,7 +226,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidAction1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-id", "validProjectId")
 					.field("action", "invalid").field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}")
 					.asJson();
@@ -242,7 +242,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidProjectID1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validAdminKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
 					.header("accept", "application/json").field("project-id", "invalid").field("action", "remove users")
 					.field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}").asJson();
 
@@ -273,7 +273,7 @@ public class TestApiV1 {
 	public void testValidGetActivities1() {
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest
-					.get("http://localhost:4567/activities/validProjectId/validUserKey")
+					.get("http://localhost:4567/activities/validProjectId/validKey")
 					.header("accept", "application/json").asJson();
 
 			assertEquals("{\"activity-id\":\"abcdf\",\"title\":\"this is a valid activity\",\"status\":\"planned\"}",
@@ -288,7 +288,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidGetActivities1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.get("http://localhost:4567/activities/invalid/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.get("http://localhost:4567/activities/invalid/validKey")
 					.header("accept", "application/json").asJson();
 
 			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
@@ -316,7 +316,7 @@ public class TestApiV1 {
 	@Test
 	public void testValidCreateSprint1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/validKey")
 					.header("accept", "application/json").field("project-id", "validProjectId")
 					.field("title", "sprint1").field("index", "1").asJson();
 
@@ -346,7 +346,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidCreateSprint2() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/validKey")
 					.header("accept", "application/json").field("project-id", "invalidProjectId")
 					.field("title", "sprint1").field("index", "1").asJson();
 
@@ -361,8 +361,7 @@ public class TestApiV1 {
 	@Test
 	public void testValidGetActivity1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest
-					.get("http://localhost:4567/activity/validActivityId/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.get("http://localhost:4567/activity/validActivityId/validKey")
 					.header("accept", "application/json").asJson();
 
 			assertEquals(
@@ -394,7 +393,7 @@ public class TestApiV1 {
 	public void testInvalidGetActivity2() {
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest
-					.get("http://localhost:4567/activity/invalidActivityId/validUserKey")
+					.get("http://localhost:4567/activity/invalidActivityId/validKey")
 					.header("accept", "application/json").asJson();
 
 			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
@@ -408,7 +407,7 @@ public class TestApiV1 {
 	@Test
 	public void testValidEditActivity1() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validKey")
 					.header("accept", "application/json").field("activity-id", "validActivityId")
 					.field("project-id", "validProjectId").field("title", "short description")
 					.field("description", "long description").field("status", "planned").field("priority", "high")
@@ -444,7 +443,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidEditActivity2() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validKey")
 					.header("accept", "application/json").field("activity-id", "invalidActivityId")
 					.field("project-id", "validProjectId").field("title", "short description")
 					.field("description", "long description").field("status", "planned").field("priority", "high")
@@ -462,7 +461,7 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidEditActivity3() {
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validUserKey")
+			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validKey")
 					.header("accept", "application/json").field("activity-id", "validActivityId")
 					.field("project-id", "invalidProjectId").field("title", "short description")
 					.field("description", "long description").field("status", "planned").field("priority", "high")
@@ -481,7 +480,7 @@ public class TestApiV1 {
 	public void testValidDelete1() {
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest
-					.delete("http://localhost:4567/activity/validActivityId/validUserKey")
+					.delete("http://localhost:4567/activity/validActivityId/validKey")
 					.header("accept", "application/json").asJson();
 
 			assertEquals("{\"message\":\"activity deleted\"}", jsonResponse.getBody().toString());
@@ -511,7 +510,7 @@ public class TestApiV1 {
 	public void testinValidDelete2() {
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest
-					.delete("http://localhost:4567/activity/invalidActivityId/validUserKey")
+					.delete("http://localhost:4567/activity/invalidActivityId/validKey")
 					.header("accept", "application/json").asJson();
 
 			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());

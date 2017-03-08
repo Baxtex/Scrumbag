@@ -2,24 +2,27 @@ package businessLayer;
 
 import org.codehaus.jettison.json.JSONObject;
 
+import dataLayer.DBHandler;
 import spark.Response;
 
 public class Delete {
 
-	public Object deleteActivity(String aID, String key, Response res) {
+	private final DBHandler dh;
+
+	public Delete(DBHandler dh) {
+		this.dh = dh;
+	}
+
+	public Object deleteActivity(String aID, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
-			if (checkIfUser(key)) {
-				if (checkActivityId(aID)) {
-					jObj.put("message", "activity deleted");
-					res.status(200);
-				} else {
-					jObj.put("message", "activity does not exist");
-					res.status(404);
-				}
+			if (dh.checkActivityId(aID)) {
+				dh.deleteActivity();
+				jObj.put("message", "activity deleted");
+				res.status(200);
 			} else {
-				jObj.put("message", "key does not exist");
-				res.status(401);
+				jObj.put("message", "activity does not exist");
+				res.status(404);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -27,22 +30,4 @@ public class Delete {
 		res.type("application/json");
 		return jObj;
 	}
-
-	private boolean checkIfUser(String key) {
-		if (key.equals("validUserKey")) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-
-	private boolean checkActivityId(String id) {
-		if (id.equals("validActivityId")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 }
