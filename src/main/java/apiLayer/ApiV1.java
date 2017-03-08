@@ -1,8 +1,8 @@
-package api;
+package apiLayer;
 
 import static spark.Spark.*;
 
-import controller.Controller;
+import businessLayer.Controller;
 
 /**
  * This class is the interface of the rest api. It routes the request and

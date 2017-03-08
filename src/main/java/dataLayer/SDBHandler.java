@@ -1,4 +1,4 @@
-package database;
+package dataLayer;
 
 import java.util.Random;
 

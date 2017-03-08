@@ -1,8 +1,8 @@
-package controller;
+package securityLayer;
 
 import java.util.Random;
 
-import database.SDBHandler;
+import dataLayer.SDBHandler;
 
 public class SecurityHandler {
 	

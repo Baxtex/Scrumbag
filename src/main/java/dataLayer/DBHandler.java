@@ -1,4 +1,4 @@
-package database;
+package dataLayer;
 
 /**
  * Database handler for the database.
