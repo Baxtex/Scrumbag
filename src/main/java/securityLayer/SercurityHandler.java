@@ -6,7 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import spark.Response;
 
-public class SHandler {
+public class SercurityHandler {
 
 	/**
 	 * Other
@@ -21,7 +21,7 @@ public class SHandler {
 	private final String PASSWORD_Admin = "kisekatt123";
 	private int key_Admin;
 
-	public SHandler() {
+	public SercurityHandler() {
 		rdm = new Random();
 	}
 

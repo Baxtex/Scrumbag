@@ -9,8 +9,8 @@ import org.codehaus.jettison.json.JSONObject;
  * @author Anton
  *
  */
-public class DBHandler {
-	
+public class DataHandler {
+
 	public boolean checkProjectId(String id) {
 		if (id.equals("validProjectId")) {
 			return true;
@@ -26,6 +26,7 @@ public class DBHandler {
 			return false;
 		}
 	}
+
 	public boolean checkProjectName(String name) {
 		if (name.equals("validActivityName")) {
 			return true;
@@ -33,7 +34,7 @@ public class DBHandler {
 			return false;
 		}
 	}
-	
+
 	public boolean validUsers(JSONObject jsonObjUsers) {
 		String invalid = "";
 		try {
@@ -62,31 +63,21 @@ public class DBHandler {
 
 	public void createProject() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void createSprint() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void addUsers() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void removeUsers() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void editActivity() {
 		// TODO Auto-generated method stub
-		
 	}
-	
-
-
-
-
 }

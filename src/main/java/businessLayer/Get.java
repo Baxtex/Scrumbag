@@ -2,22 +2,22 @@ package businessLayer;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import dataLayer.DBHandler;
+import dataLayer.DataHandler;
 import spark.Response;
 
 public class Get {
 
-	private final DBHandler dh;
+	private final DataHandler dataHandler;
 
-	public Get(DBHandler dh) {
-		this.dh = dh;
+	public Get(DataHandler dataHandler) {
+		this.dataHandler = dataHandler;
 	}
 
 	public JSONObject getActivities(String pID, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
-			if (dh.checkProjectId(pID)) {
-				dh.getActivities();
+			if (dataHandler.checkProjectId(pID)) {
+				dataHandler.getActivities();
 				jObj.put("activity-id", "abcdf");
 				jObj.put("title", "this is a valid activity");
 				jObj.put("status", "planned");
@@ -36,8 +36,8 @@ public class Get {
 	public JSONObject getActivity(String aID, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
-			if (dh.checkActivityId(aID)) {
-				dh.getActivity();
+			if (dataHandler.checkActivityId(aID)) {
+				dataHandler.getActivity();
 				jObj.put("activity-id", "xxx");
 				jObj.put("project-id", "xxx");
 				jObj.put("title", "xxx");

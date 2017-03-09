@@ -2,22 +2,22 @@ package businessLayer;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import dataLayer.DBHandler;
+import dataLayer.DataHandler;
 import spark.Response;
 
 public class Delete {
 
-	private final DBHandler dh;
+	private final DataHandler dataHandler;
 
-	public Delete(DBHandler dh) {
-		this.dh = dh;
+	public Delete(DataHandler dataHandler) {
+		this.dataHandler = dataHandler;
 	}
 
 	public Object deleteActivity(String aID, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
-			if (dh.checkActivityId(aID)) {
-				dh.deleteActivity();
+			if (dataHandler.checkActivityId(aID)) {
+				dataHandler.deleteActivity();
 				jObj.put("message", "activity deleted");
 				res.status(200);
 			} else {

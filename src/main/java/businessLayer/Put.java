@@ -3,26 +3,25 @@ package businessLayer;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import dataLayer.DBHandler;
+import dataLayer.DataHandler;
 import spark.Response;
 
 public class Put {
 
-	private final DBHandler dh;
+	private final DataHandler dataHandler;
 
-	public Put(DBHandler dh) {
-		this.dh = dh;
+	public Put(DataHandler dataHandler) {
+		this.dataHandler = dataHandler;
 	}
 
 	public JSONObject userManagement(String pID, String action, String userIDs, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
 			JSONObject jObjUserIDs = new JSONObject(userIDs);
-
-			if (dh.checkProjectId(pID)) {
+			if (dataHandler.checkProjectId(pID)) {
 				if (action.equals("add users")) {
-					if (dh.validUsers(jObjUserIDs)) {
-						dh.addUsers();
+					if (dataHandler.validUsers(jObjUserIDs)) {
+						dataHandler.addUsers();
 						jObj.put("message", "users added");
 						res.status(200);
 					} else {
@@ -30,8 +29,8 @@ public class Put {
 						res.status(404);
 					}
 				} else if (action.equals("remove users")) {
-					if (dh.validUsers(jObjUserIDs)) {
-						dh.removeUsers();
+					if (dataHandler.validUsers(jObjUserIDs)) {
+						dataHandler.removeUsers();
 						jObj.put("message", "users removed");
 						res.status(200);
 					} else {
@@ -57,11 +56,9 @@ public class Put {
 			String expecTime, String addTime, String sprintID, String uID, Response res) {
 		JSONObject jObj = new JSONObject();
 		try {
-
-			if (dh.checkProjectId(pID)) {
-
-				if (dh.checkActivityId(aID)) {
-					dh.editActivity();
+			if (dataHandler.checkProjectId(pID)) {
+				if (dataHandler.checkActivityId(aID)) {
+					dataHandler.editActivity();
 					jObj.put("message", "activity changed");
 					res.status(200);
 				} else {
@@ -72,12 +69,10 @@ public class Put {
 				jObj.put("message", "project does not exist");
 				res.status(404);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		res.type("application/json");
 		return jObj;
 	}
-
 }

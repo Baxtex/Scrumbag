@@ -1,19 +1,18 @@
 package apiLayer;
 
+import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import static spark.Spark.delete;
-
 import businessLayer.Delete;
 import businessLayer.Get;
 import businessLayer.Post;
 import businessLayer.Put;
-import dataLayer.DBHandler;
-import securityLayer.SHandler;
+import dataLayer.DataHandler;
+import securityLayer.SercurityHandler;
 import spark.Response;
 
 /**
@@ -25,12 +24,12 @@ import spark.Response;
  *
  */
 public class ApiV1 {
-	private final DBHandler dh = new DBHandler();
-	private final SHandler sh = new SHandler();
-	private final Get get = new Get(dh);
-	private final Post post = new Post(dh);
-	private final Put put = new Put(dh);
-	private final Delete delete = new Delete(dh);
+	private final DataHandler dataHandler = new DataHandler();
+	private final SercurityHandler secHandler = new SercurityHandler();
+	private final Get get = new Get(dataHandler);
+	private final Post post = new Post(dataHandler);
+	private final Put put = new Put(dataHandler);
+	private final Delete delete = new Delete(dataHandler);
 
 	public static void main(String[] args) {
 		new ApiV1();
@@ -49,7 +48,7 @@ public class ApiV1 {
 	private void setupGetEndpoints() {
 
 		get("/activities/:project-id/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return get.getActivities(req.params(":project-id"), res);
 			} else {
@@ -58,7 +57,7 @@ public class ApiV1 {
 		});
 
 		get("/activity/:activity-id/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return get.getActivity(req.params(":activity-id"), res);
 			} else {
@@ -72,28 +71,28 @@ public class ApiV1 {
 	 */
 	private void setupPostEndpoints() {
 
-		post("/login", (req, res) -> sh.login(req.queryParams("username"), req.queryParams("password"), res));
+		post("/login", (req, res) -> secHandler.login(req.queryParams("username"), req.queryParams("password"), res));
 
 		post("/logout/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
-				return sh.logout(res);
+				return secHandler.logout(res);
 			} else {
 				return createErrorJSON(res);
 			}
 		});
 
 		post("/user/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
-				return sh.createUser(req.queryParams("username"), req.queryParams("password"), res);
+				return secHandler.createUser(req.queryParams("username"), req.queryParams("password"), res);
 			} else {
 				return createErrorJSON(res);
 			}
 		});
 
 		post("/project/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return post.createProject(req.queryParams("project-name"), res);
 			} else {
@@ -102,7 +101,7 @@ public class ApiV1 {
 		});
 
 		post("/sprint/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return post.createSprint(req.queryParams("project-id"), req.queryParams("title"),
 						req.queryParams("index"), res);
@@ -118,7 +117,7 @@ public class ApiV1 {
 	private void setupPutEndpoints() {
 
 		put("/project/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return put.userManagement(req.queryParams("project-id"), req.queryParams("action"),
 						req.queryParams("user-ids"), res);
@@ -128,7 +127,7 @@ public class ApiV1 {
 		});
 
 		put("/activity/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return put.editActivity(req.queryParams("activity-id"), req.queryParams("project-id"),
 						req.queryParams("title"), req.queryParams("description"), req.queryParams("status"),
@@ -148,7 +147,7 @@ public class ApiV1 {
 	private void setupDeleteEndpoints() {
 
 		delete("/activity/:activity-id/:key", (req, res) -> {
-			boolean keyIsValid = sh.checkKey(req.params(":key"));
+			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
 			if (keyIsValid) {
 				return delete.deleteActivity(req.params(":activity-id"), res);
 			} else {
