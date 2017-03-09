@@ -19,6 +19,13 @@ import java.util.Set;
 
 public class SecurityDB {
 	
+	// Constructor is only for testing purposes. May be removed later.
+	
+	public SecurityDB() {
+		createUser("adminUsername", "adminPassword", 1);
+		createUser("unauthorizedUsername", "unauthorizedPassword", 0);
+	}
+	
 	private Hashtable<String, User> users = new Hashtable<String, User>();
 	private Hashtable<String, Session> sessions = new Hashtable<String, Session>();
 	

@@ -247,26 +247,31 @@ public class ApiV1 {
 					json.put("Message", "Failed to log in.");
 					json.put("Username", data);
 					res.status(STATUSCODE_INVALID);
+					break;
 				}
 				case OPERATION_LOGOUT: {
 					json.put("Message", "Failed to log out.");
 					json.put("Key", data);
 					res.status(STATUSCODE_INVALID);
+					break;
 				}
 				case OPERATION_VALIDATEKEY: {
 					json.put("Message", "Key is invalid.");
 					json.put("Key", data);
 					res.status(STATUSCODE_INVALID);
+					break;
 				}
 				case OPERATION_AUTHORIZATION: {
 					json.put("Message", "User is unauthorized to do this.");
 					json.put("Key", data);
 					res.status(STATUSCODE_UNAUTHORIZED);
+					break;
 				}
 				case OPERATION_CREATEUSER: {
 					json.put("Message", "Could not createt user. Username is taken.");
 					json.put("Username", data);
 					res.status(STATUSCODE_DUPLICATE);
+					break;
 				}
 			}
 		} catch (JSONException e) {
@@ -291,19 +296,22 @@ public class ApiV1 {
 		try {
 			switch(operation) {
 				case OPERATION_LOGIN: {
-					json.put("Message:", "Successfully logged in.");
-					json.put("Session key:", data);
+					json.put("Message", "Successfully logged in.");
+					json.put("Key", data);
 					res.status(STATUSCODE_CREATED);
+					break;
 				}
 				case OPERATION_LOGOUT: {
-					json.put("Message:", "Succefully logged out.");
-					json.put("Session key:", data);
+					json.put("Message", "Succefully logged out.");
+					json.put("Key", data);
 					res.status(STATUSCODE_OK);
+					break;
 				}
 				case OPERATION_CREATEUSER: {
-					json.put("Message:", "User was successfully created.");
-					json.put("Username:", data);
+					json.put("Message", "User was successfully created.");
+					json.put("Username", data);
 					res.status(STATUSCODE_CREATED);
+					break;
 				}
 			}
 		} catch (JSONException e) {
