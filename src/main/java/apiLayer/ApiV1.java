@@ -5,6 +5,7 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import businessLayer.Delete;
@@ -12,20 +13,34 @@ import businessLayer.Get;
 import businessLayer.Post;
 import businessLayer.Put;
 import dataLayer.DataHandler;
-import securityLayer.SercurityHandler;
+import securityLayer.Security;
 import spark.Response;
 
 /**
  * This class is the interface of the rest api. It routes the request and
- * extrats the correct parameters and pass them to the Controller for further
+ * extracts the correct parameters and pass them to the Controller for further
  * processing. Base URI is: http://localhost:4567/
  * 
- * @author Anton
+ * @author Anton Gustafsson
  *
  */
 public class ApiV1 {
+	
+	private final int STATUSCODE_OK = 200;
+	private final int STATUSCODE_CREATED = 201;
+	private final int STATUSCODE_INVALID = 401;				// Resursen finns inte
+	private final int STATUSCODE_UNAUTHORIZED = 403;		// Resursen finns, men får inte
+	private final int STATUSCODE_DUPLICATE = 409;			// Resursen finns redan
+	
+	private final int OPERATION_LOGIN = 0;
+	private final int OPERATION_LOGOUT = 1;
+	private final int OPERATION_VALIDATEKEY = 3;
+	private final int OPERATION_AUTHORIZATION = 4;
+	private final int OPERATION_CREATEUSER = 5;
+	
+	
 	private final DataHandler dataHandler = new DataHandler();
-	private final SercurityHandler secHandler = new SercurityHandler();
+	private final Security security = new Security();
 	private final Get get = new Get(dataHandler);
 	private final Post post = new Post(dataHandler);
 	private final Put put = new Put(dataHandler);
@@ -36,6 +51,7 @@ public class ApiV1 {
 	}
 
 	public ApiV1() {
+		
 		setupGetEndpoints();
 		setupPostEndpoints();
 		setupPutEndpoints();
@@ -48,20 +64,26 @@ public class ApiV1 {
 	private void setupGetEndpoints() {
 
 		get("/activities/:project-id/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return get.getActivities(req.params(":project-id"), res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				return createErrorJSON(res);
+				String projectId = req.params(":project-id");
+				return get.getActivities(projectId, res);
 			}
 		});
 
 		get("/activity/:activity-id/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return get.getActivity(req.params(":activity-id"), res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				return createErrorJSON(res);
+				String activityId = req.params(":activity-id");
+				return get.getActivity(activityId, res);
 			}
 		});
 	}
@@ -69,45 +91,80 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for post requests.
 	 */
+	
 	private void setupPostEndpoints() {
 
-		post("/login", (req, res) -> secHandler.login(req.queryParams("username"), req.queryParams("password"), res));
+		post("/login", (req, res) -> {
+			
+			String username = req.queryParams("username");
+			String password = req.queryParams("password");
+			String key = security.login(username, password);
+			
+			if(key == null) {
+				return createErrorMsg(OPERATION_LOGIN, username,  res);
+			} else {
+				return createSuccessMsg(OPERATION_LOGIN, key, res);
+			}
+		});
 
 		post("/logout/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return secHandler.logout(res);
+			
+			String key = req.params(":key");
+			
+			if(!security.logout(key)) {
+				return createErrorMsg(OPERATION_LOGOUT, key, res);
 			} else {
-				return createErrorJSON(res);
+				return createSuccessMsg(OPERATION_LOGOUT, key, res);
 			}
 		});
 
 		post("/user/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return secHandler.createUser(req.queryParams("username"), req.queryParams("password"), res);
+			
+			String key = req.params(":key");
+			String username = req.queryParams("username");
+			String password = req.queryParams("password");
+			String authority = req.queryParams("authority");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+			}
+			if(!security.hasAdminAuthority(key)) {
+				return createErrorMsg(OPERATION_AUTHORIZATION, key, res);
+			}	
+			if(!security.createUser(username, password, authority)) {
+				return createErrorMsg(OPERATION_CREATEUSER, username, res);
 			} else {
-				return createErrorJSON(res);
+				return createSuccessMsg(OPERATION_CREATEUSER, username, res);
 			}
 		});
 
 		post("/project/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return post.createProject(req.queryParams("project-name"), res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+			}
+			if(!security.hasAdminAuthority(key)) {
+				return createErrorMsg(OPERATION_AUTHORIZATION, key, res);
 			} else {
-				return createErrorJSON(res);
+				return post.createProject(req.queryParams("project-name"), res);
 			}
 		});
 
 		post("/sprint/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return post.createSprint(req.queryParams("project-id"), req.queryParams("title"),
-						req.queryParams("index"), res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				return createErrorJSON(res);
+				String projectId = req.queryParams("project-id");
+				String sprintTitle = req.queryParams("title");
+				String sprintIndex = req.queryParams("index");
+				return post.createSprint(projectId, sprintTitle, sprintIndex, res);
 			}
+			
 		});
 	}
 
@@ -117,25 +174,38 @@ public class ApiV1 {
 	private void setupPutEndpoints() {
 
 		put("/project/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return put.userManagement(req.queryParams("project-id"), req.queryParams("action"),
-						req.queryParams("user-ids"), res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				return createErrorJSON(res);
+				String projectId = req.queryParams("project-id");
+				String action = req.queryParams("action");
+				String userIds = req.queryParams("user-ids");
+				return put.userManagement(projectId, action, userIds, res);
 			}
 		});
 
 		put("/activity/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return put.editActivity(req.queryParams("activity-id"), req.queryParams("project-id"),
-						req.queryParams("title"), req.queryParams("description"), req.queryParams("status"),
-						req.queryParams("priority"), req.queryParams("expected-time"),
-						req.queryParams("additional-time"), req.queryParams("sprint-id"), req.queryParams("user-id"),
-						res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				return createErrorJSON(res);
+				String activityId = req.queryParams("activity-id");
+				String projectId = req.queryParams("project-id");
+				String title = req.queryParams("activity-id");
+				String description = req.queryParams("description");
+				String status = req.queryParams("status");
+				String priority = req.queryParams("priority");
+				String expectedTime = req.queryParams("expected-time");
+				String additionalTime = req.queryParams("additional-time");
+				String sprintId = req.queryParams("sprint-id");
+				String userId = req.queryParams("user-id");
+				return put.editActivity(activityId, projectId, title, description, status,
+								priority, expectedTime, additionalTime, sprintId, userId, res);
 			}
 		});
 
@@ -147,31 +217,99 @@ public class ApiV1 {
 	private void setupDeleteEndpoints() {
 
 		delete("/activity/:activity-id/:key", (req, res) -> {
-			boolean keyIsValid = secHandler.checkKey(req.params(":key"));
-			if (keyIsValid) {
-				return delete.deleteActivity(req.params(":activity-id"), res);
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				return createErrorJSON(res);
+				String activityId = req.params(":activity-id");
+				return delete.deleteActivity(activityId, res);
 			}
 		});
 	}
-
+	
 	/**
-	 * If key isn't valid, create and return a json object containing an error
-	 * message and status code.
-	 * 
-	 * @param res
+	 * Returns a JSON object with error information depending on operation.
+	 * @param operation during which the error occurred
+	 * @param data relevant data to the error
+	 * @param res the response header
 	 * @return
 	 */
-	public JSONObject createErrorJSON(Response res) {
-		JSONObject jObj = new JSONObject();
-		try {
-			jObj.put("message", "key does not exist");
-			res.status(401);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
+	public JSONObject createErrorMsg(int operation, Object data, Response res) {
+		JSONObject json = new JSONObject();
 		res.type("application/json");
-		return jObj;
+		
+		try {
+			switch(operation) {
+				case OPERATION_LOGIN: {
+					json.put("Message", "Failed to log in.");
+					json.put("Username", data);
+					res.status(STATUSCODE_INVALID);
+				}
+				case OPERATION_LOGOUT: {
+					json.put("Message", "Failed to log out.");
+					json.put("Key", data);
+					res.status(STATUSCODE_INVALID);
+				}
+				case OPERATION_VALIDATEKEY: {
+					json.put("Message", "Key is invalid.");
+					json.put("Key", data);
+					res.status(STATUSCODE_INVALID);
+				}
+				case OPERATION_AUTHORIZATION: {
+					json.put("Message", "User is unauthorized to do this.");
+					json.put("Key", data);
+					res.status(STATUSCODE_UNAUTHORIZED);
+				}
+				case OPERATION_CREATEUSER: {
+					json.put("Message", "Could not createt user. Username is taken.");
+					json.put("Username", data);
+					res.status(STATUSCODE_DUPLICATE);
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println("Failed when adding stuff to JSON object.");
+		}
+
+		return json;
+	}
+	
+	/**
+	 * Returns a JSON object with success information depending on operation.
+	 * @param operation during which the error occurred
+	 * @param data relevant data to the error
+	 * @param res the response header
+	 * @return
+	 */
+	
+	public JSONObject createSuccessMsg(int operation, Object data, Response res) {
+		JSONObject json = new JSONObject();
+		res.type("application/json");
+		
+		try {
+			switch(operation) {
+				case OPERATION_LOGIN: {
+					json.put("Message:", "Successfully logged in.");
+					json.put("Session key:", data);
+					res.status(STATUSCODE_CREATED);
+				}
+				case OPERATION_LOGOUT: {
+					json.put("Message:", "Succefully logged out.");
+					json.put("Session key:", data);
+					res.status(STATUSCODE_OK);
+				}
+				case OPERATION_CREATEUSER: {
+					json.put("Message:", "User was successfully created.");
+					json.put("Username:", data);
+					res.status(STATUSCODE_CREATED);
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println("Failed when adding stuff to JSON object.");
+		}
+		
+		return json;
 	}
 }
