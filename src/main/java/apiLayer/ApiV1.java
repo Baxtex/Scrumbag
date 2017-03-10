@@ -135,7 +135,7 @@ public class ApiV1 {
 		// Create a user
 
 		post("/user/:key", (req, res) -> {
-			
+						
 			String key = req.params(":key");
 			String username = req.queryParams("username");
 			String password = req.queryParams("password");
@@ -159,6 +159,7 @@ public class ApiV1 {
 		post("/project/:key", (req, res) -> {
 			
 			String key = req.params(":key");
+			String projectName = req.queryParams("project-name");
 			
 			if(!security.isValidKey(key)) {
 				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
@@ -166,7 +167,7 @@ public class ApiV1 {
 			if(!security.hasAdminAuthority(key)) {
 				return createErrorMsg(OPERATION_AUTHORIZATION, key, res);
 			} else {
-				return post.createProject(req.queryParams("project-name"), res);
+				return post.createProject(projectName, res);
 			}
 		});
 		
@@ -296,7 +297,7 @@ public class ApiV1 {
 					break;
 				}
 				case OPERATION_CREATEUSER: {
-					json.put("Message", "Could not createt user. Username is taken.");
+					json.put("Message", "Could not create user. Username is taken.");
 					json.put("Username", data);
 					res.status(STATUSCODE_DUPLICATE);
 					break;

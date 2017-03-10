@@ -19,14 +19,24 @@ import apiLayer.ApiV1;
  */
 public class TestApiV1 {
 	
+	// Two users are automatically created when the program starts executing:
+	
+	private final String ADMIN_USERNAME = "adminUsername";
+	private final String ADMIN_PASSWORD = "adminPassword";
+	private final String ADMIN_KEY = "benjoVtfsobnfbenjoQbttxpse";
+	
+	private final String UNAUTHORIZED_USERNAME = "unauthorizedUsername";
+	private final String UNAUTHORIZED_PASSWORD = "unauthorizedPassword";
+	private final String UNAUTHORIZED_KEY = "vobvuipsj{feVtfsobnfvobvuipsj{feQbttxpse";
+	
 	// Login with existing user
 	
 	@Test
 	public void testValidLogin1() {	
 		
-		String username = "adminUsername";
-		String password = "adminPassword";
-		String key = "benjoVtfsobnfbenjoQbttxpse";
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
 		
 		HttpResponse<JsonNode> response = login(username, password);	
 		
@@ -66,9 +76,9 @@ public class TestApiV1 {
 	@Test
 	public void testValidLogout1() {
 		
-		String username = "adminUsername";
-		String password = "adminPassword";
-		String key = "benjoVtfsobnfbenjoQbttxpse";
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
 		
 		login(username, password);
 		HttpResponse<JsonNode> response = logout(key);
@@ -83,12 +93,13 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 	
-	// Logout from a offline or none existing user
+	// Logout from an offline or none existing user
 
 	@Test
 	public void testInvalidLogout1() {
 		
 		String key = "invalid";
+		
 		HttpResponse<JsonNode> response = logout(key);
 		
 		String expectedBody = "{\"Message\":\"Failed to log out.\",\"Key\":\"" + key + "\"}";
@@ -106,13 +117,14 @@ public class TestApiV1 {
 	@Test
 	public void testValidCreateUser1() {
 		
-		login("adminUsername", "adminPassword");
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+				
+		String username = "user";
+		String password = "123";
+		String authority = "0";
+		String key = ADMIN_KEY;
 		
-		String username = "newUser";
-		String password = "newPassword";
-		String key = "benjoVtfsobnfbenjoQbttxpse";
-		
-		HttpResponse<JsonNode> response = createUser(username, password, key);
+		HttpResponse<JsonNode> response = createUser(username, password, authority, key);
 		
 		String expectedBody = "{\"Message\":\"User was successfully created.\",\"Username\":\"" + username + "\"}";
 		String expectedStatus = "201";
@@ -130,13 +142,14 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidCreateUser1() {
 		
-		login("adminUsername", "adminPassword");
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
 		
 		String username = "user";
 		String password = "123";
+		String authority = "0";
 		String key = "invalid";
 		
-		HttpResponse<JsonNode> response = createUser(username, password, key);
+		HttpResponse<JsonNode> response = createUser(username, password, authority, key);
 		
 		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
 		String expectedStatus = "401";
@@ -153,13 +166,104 @@ public class TestApiV1 {
 	@Test
 	public void testInvalidCreateUser2() {
 		
-		login("unauthorizedUsername", "unauthorizedPassword");
+		login(UNAUTHORIZED_USERNAME, UNAUTHORIZED_PASSWORD);
 		
 		String username = "user";
 		String password = "123";
-		String key = "vobvuipsj{feVtfsobnfvobvuipsj{feQbttxpse";
+		String authority = "0";
+		String key = UNAUTHORIZED_KEY;
 		
-		HttpResponse<JsonNode> response = createUser(username, password, key);
+		HttpResponse<JsonNode> response = createUser(username, password, authority, key);
+		
+		String expectedBody = "{\"Message\":\"User is unauthorized to do this.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "403";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+				
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Create user that with user name that is already taken
+	
+	@Test
+	public void testInvalidCreateUser3() {
+		
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+				
+		String username = "user";
+		String password = "123";
+		String authority = "0";
+		String key = ADMIN_KEY;
+		
+		createUser("user", "xxx", "0", key);
+		
+		HttpResponse<JsonNode> response = createUser(username, password, authority, key);
+		
+		String expectedBody = "{\"Message\":\"Could not create user. Username is taken.\",\"Username\":\"" + username + "\"}";
+		String expectedStatus = "409";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+				
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+
+	// Create a project with authorized key
+	
+	@Test
+	public void testValidCreateProject1() {		
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		
+		String projectName = "validActivityName";
+		String key = ADMIN_KEY;
+		
+		HttpResponse<JsonNode> response = createProject(projectName, key);
+		
+		String expectedBody = "{\"project-id\":\"XXX\"}";
+		String expectedStatus = "201";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+				
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Create project with invalid key
+	
+	@Test
+	public void testInvalidCreateProject1() {	
+		
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		
+		String projectName = "validActivityName";
+		String key = "invalidKey";
+		
+		HttpResponse<JsonNode> response = createProject(projectName, key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+				
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Create project with unauthorized key
+	
+	@Test
+	public void testInvalidCreateProject2() {		
+		login(UNAUTHORIZED_USERNAME, UNAUTHORIZED_PASSWORD);
+		
+		String projectName = "validActivityName";
+		String key = UNAUTHORIZED_KEY;
+		
+		HttpResponse<JsonNode> response = createProject(projectName, key);
 		
 		String expectedBody = "{\"Message\":\"User is unauthorized to do this.\",\"Key\":\"" + key + "\"}";
 		String expectedStatus = "403";
@@ -175,21 +279,6 @@ public class TestApiV1 {
 	
 	
 	
-	
-//	@Test
-//	public void testValidCreateProject1() {		
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-name", "validActivityName").asJson();
-//
-//			assertEquals("{\"project-id\":\"XXX\"}", jsonResponse.getBody().toString());
-//			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
 //	@Test
 //	public void testInvalidCreateProject1() {
 //		try {
@@ -613,13 +702,27 @@ public class TestApiV1 {
 		return response;
 	}
 	
-	private HttpResponse<JsonNode> createUser(String username, String password, String key) {
+	private HttpResponse<JsonNode> createUser(String username, String password, String authority, String key) {
 		HttpResponse<JsonNode> response = null;
 		try {
 			response = Unirest.post("http://localhost:4567/user/" + key)
 						.header("accept", "application/json")
 						.field("username", username)
-						.field("password", password).asJson();
+						.field("password", password)
+						.field("authority", authority).asJson();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	private HttpResponse<JsonNode> createProject(String projectName, String key) {
+		HttpResponse<JsonNode> response = null;
+		
+		try {
+			response = Unirest.post("http://localhost:4567/project/" + key)
+						.header("accept", "application/json")
+						.field("project-name", projectName).asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}

@@ -74,19 +74,19 @@ public class SecurityDB {
 	 */
 	
 	protected void createSession(String key, long timestamp, int authority) {
-		sessions.put(key, new Session(key, timestamp, authority));
+		sessions.put(key, new Session(key, timestamp, authority));		
 	}
 	
 	/**
 	 * Creates a new user and stores in "database", if the user name is not taken.
 	 */
 	
-	protected boolean createUser(String username, String password, int authority) {
+	protected boolean createUser(String username, String password, int authority) {		
 		User user = users.get(username);
 		if(user != null) {
 			return false;
 		} 
-		users.put(username, new User(username, password, authority));
+		users.put(username, new User(username, password, authority));		
 		return true;
 	}
 	
