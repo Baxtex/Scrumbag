@@ -5,16 +5,12 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import businessLayer.Delete;
 import businessLayer.Get;
 import businessLayer.Post;
 import businessLayer.Put;
 import dataLayer.DataHandler;
 import securityLayer.Security;
-import spark.Response;
 
 /**
  * This class is the interface of the rest api. It routes the request and
