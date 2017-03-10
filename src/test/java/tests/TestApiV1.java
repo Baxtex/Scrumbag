@@ -275,155 +275,233 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 	
+	
+
 
 	
 	
 	
-//	@Test
-//	public void testInvalidCreateProject1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-name", "invalid").asJson();
-//
-//			assertEquals("{\"message\":\"not allowed\"}", jsonResponse.getBody().toString());
-//			assertEquals("403", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidCreateProject2() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/project/invalidKey")
-//					.header("accept", "application/json").field("project-name", "project1").asJson();
-//
-//			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testValidAddUserManagementAndActionAndProjectName1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("action", "add users").field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}")
-//					.asJson();
-//
-//			assertEquals("{\"message\":\"users added\"}", jsonResponse.getBody().toString());
-//			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testValidRemoveUserManagementAndActionAndProjectName1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("action", "remove users").field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}")
-//					.asJson();
-//
-//			assertEquals("{\"message\":\"users removed\"}", jsonResponse.getBody().toString());
-//			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidAddUserManagement1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("action", "add users").field("user-ids", "{\"name\":\"invalid\", \"name\":\"invalid\"}")
-//					.asJson();
-//
-//			assertEquals("{\"message\":\"invalid user names\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidRemoveUserManagement1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("action", "remove users").field("user-ids", "{\"name\":\"invalid\", \"name\":\"invalid\"}")
-//					.asJson();
-//
-//			assertEquals("{\"message\":\"invalid user names\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidAction1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("action", "invalid").field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}")
-//					.asJson();
-//
-//			assertEquals("{\"message\":\"invalid action\"}", jsonResponse.getBody().toString());
-//			assertEquals("403", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidProjectID1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/validKey")
-//					.header("accept", "application/json").field("project-id", "invalid").field("action", "remove users")
-//					.field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}").asJson();
-//
-//			assertEquals("{\"message\":\"project-id does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidKey1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/project/invalidKey")
-//					.header("accept", "application/json").field("project-id", "invalid").field("action", "remove users")
-//					.field("user-ids", "{\"name\":\"user-id1\", \"name\":\"user-id2\"}").asJson();
-//
-//			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
+	
+	
+	// TODO: Maybe some more refactoring of these tests later.
+	
+	// Change a project - add users
+	
+	@Test
+	public void testValidAddUserManagementAndActionAndProjectName1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String action = "add users";
+		String[] users = {"user-id1", "user-id2" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
+		
+		String expectedBody = "{\"message\":\"users added\"}";
+		String expectedStatus = "200";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change a project - remove users
+
+	@Test
+	public void testValidRemoveUserManagementAndActionAndProjectName1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String action1 = "add users";
+		String action2 = "remove users";
+		String[] users = {"user-id1", "user-id2" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		changeProject(projectId, action1, users, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action2, users, key);
+		
+		String expectedBody = "{\"message\":\"users removed\"}";
+		String expectedStatus = "200";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+
+	// Change a project - add user that does not exist
+	
+	@Test
+	public void testInvalidAddUserManagement1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String action = "add users";
+		String[] users = {"user-id1", "invalid" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
+		
+		String expectedBody = "{\"message\":\"invalid user names\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change a project - remove user that does not exist
+
+	@Test
+	public void testInvalidRemoveUserManagement1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String action1 = "add users";
+		String action2 = "remove users";
+		String[] users1 = {"user-id1", "user-id2" };
+		String[] users2 = {"user-id1", "invalid" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		changeProject(projectId, action1, users1, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action2, users2, key);
+		
+		String expectedBody = "{\"message\":\"invalid user names\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change a project - try non existing action
+
+	@Test
+	public void testInvalidAction1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String action = "invalid";
+		String[] users = {"user-id1", "invalid" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
+		
+		String expectedBody = "{\"message\":\"invalid action\"}";
+		String expectedStatus = "403";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change a project - with invalid project id
+
+	@Test
+	public void testInvalidProjectID1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "invalid";
+		String action = "add users";
+		String[] users = {"user-id1", "invalid" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
+		
+		String expectedBody = "{\"message\":\"project-id does not exist\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change a project - with invalid key
+
+	@Test
+	public void testInvalidKey1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = "invalid";
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String action = "add users";
+		String[] users = {"user-id1", "invalid" };
+		
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// TODO: Get activities need to be implemented correct. Supposed to return a JSONArray with activites.
+	
 //	@Test
 //	public void testValidGetActivities1() {
+//		
 //		try {
 //			HttpResponse<JsonNode> jsonResponse = Unirest
 //					.get("http://localhost:4567/activities/validProjectId/validKey")
 //					.header("accept", "application/json").asJson();
-//
 //			assertEquals("{\"activity-id\":\"abcdf\",\"title\":\"this is a valid activity\",\"status\":\"planned\"}",
 //					jsonResponse.getBody().toString());
 //			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
@@ -431,6 +509,19 @@ public class TestApiV1 {
 //		} catch (UnirestException e) {
 //			e.printStackTrace();
 //		}
+//	}
+//	
+//	private HttpResponse<JsonNode> getActivites(String projectId, String key) {
+//		
+//		HttpResponse<JsonNode> response = null;
+//			try {
+//				response = Unirest
+//							.get("http://localhost:4567/activities/" + projectId + "/" + key + "")
+//							.header("accept", "application/json").asJson();
+//			} catch (UnirestException e) {
+//				e.printStackTrace();
+//			}
+//		return response;
 //	}
 //
 //	@Test
@@ -461,35 +552,65 @@ public class TestApiV1 {
 //		}
 //	}
 //
-//	@Test
-//	public void testValidCreateSprint1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/validKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("title", "sprint1").field("index", "1").asJson();
-//
-//			assertEquals("{\"sprint-id\":\"xxx\"}", jsonResponse.getBody().toString());
-//			assertEquals("201", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidCreateSprint1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/invalidKey")
-//					.header("accept", "application/json").field("project-id", "validProjectId")
-//					.field("title", "sprint1").field("index", "1").asJson();
-//
-//			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	
+	// Create a sprint
+	
+	@Test
+	public void testValidCreateSprint1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String title = "sprint1";
+		String index = "1";
+	
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
+		
+		String expectedBody = "{\"sprint-id\":\"xxx\"}";
+		String expectedStatus = "201";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+
+	}
+	
+	// Create a sprint - with invalid key
+
+	@Test
+	public void testInvalidCreateSprint1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = "invalid";
+		
+		String projectName = "validyActivityName";
+		String projectId = "validProjectId";
+		String title = "sprint1";
+		String index = "1";
+	
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
 //
 //	@Test
 //	public void testInvalidCreateSprint2() {
@@ -727,5 +848,44 @@ public class TestApiV1 {
 			e.printStackTrace();
 		}
 		return response;
+	}
+	
+	private HttpResponse<JsonNode> changeProject(String projectId, String action, String[] users, String key) {
+		
+		String JSONuserlist = "{";
+		for(int i = 0; i < users.length; i++) {
+			if(i == 0) {
+				JSONuserlist += "\"name\":\"" + users[i] + "\"";
+			}
+			JSONuserlist += ",\"name\":\"" + users[i] + "\"";
+		}
+		JSONuserlist += "}";
+		
+		HttpResponse<JsonNode> response = null;
+			try {
+				response = Unirest.put("http://localhost:4567/project/" + key)
+					.header("accept", "application/json")
+					.field("project-id", projectId)
+					.field("action", action)
+					.field("user-ids", JSONuserlist).asJson();
+			} catch (UnirestException e) {
+				e.printStackTrace();
+			}
+		return response;
+	}
+	
+	private HttpResponse<JsonNode> createSprint(String projectId, String title, String index, String key) {
+		HttpResponse<JsonNode> response = null; 
+		 	try {
+		 		response = Unirest
+		 					.post("http://localhost:4567/sprint/" + key)
+		 					.header("accept", "application/json")
+		 					.field("project-id", projectId)
+		 					.field("title", title)
+		 					.field("index", index).asJson();
+			} catch (UnirestException e) {
+				e.printStackTrace();
+			}
+		 	return response;
 	}
 }

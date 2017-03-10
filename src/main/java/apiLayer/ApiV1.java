@@ -185,7 +185,6 @@ public class ApiV1 {
 				String sprintIndex = req.queryParams("index");
 				return post.createSprint(projectId, sprintTitle, sprintIndex, res);
 			}
-			
 		});
 	}
 
