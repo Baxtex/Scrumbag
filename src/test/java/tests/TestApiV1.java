@@ -275,15 +275,9 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 	
-	
-
 
 	
-	
-	
-	
-	
-	// TODO: Maybe some more refactoring of these tests later.
+	// TODO: Maybe some more refactoring of these tests after refactoring business layer.
 	
 	// Change a project - add users
 	
@@ -493,7 +487,7 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 	
-	// TODO: Get activities need to be implemented correct. Supposed to return a JSONArray with activites.
+	// TODO: Get activities need to be implemented correct. Supposed to return a JSONArray with activities.
 	
 //	@Test
 //	public void testValidGetActivities1() {
@@ -611,184 +605,313 @@ public class TestApiV1 {
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
-//
-//	@Test
-//	public void testInvalidCreateSprint2() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.post("http://localhost:4567/sprint/validKey")
-//					.header("accept", "application/json").field("project-id", "invalidProjectId")
-//					.field("title", "sprint1").field("index", "1").asJson();
-//
-//			assertEquals("{\"message\":\"project does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testValidGetActivity1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.get("http://localhost:4567/activity/validActivityId/validKey")
-//					.header("accept", "application/json").asJson();
-//
-//			assertEquals(
-//					"{\"additional-time\":\"xxx\",\"sprint-id\":\"xxx\",\"user-id\":\"xxx\",\"description\":\"xxx\",\"expected-time\":\"xxx\",\"activity-id\":\"xxx\",\"project-id\":\"xxx\",\"title\":\"xxx\",\"priority\":\"xxx\",\"status\":\"xxx\"}",
-//					jsonResponse.getBody().toString());
-//			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidGetActivity1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest
-//					.get("http://localhost:4567/activity/validActivityId/invalidKey")
-//					.header("accept", "application/json").asJson();
-//
-//			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidGetActivity2() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest
-//					.get("http://localhost:4567/activity/invalidActivityId/validKey")
-//					.header("accept", "application/json").asJson();
-//
-//			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testValidEditActivity1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validKey")
-//					.header("accept", "application/json").field("activity-id", "validActivityId")
-//					.field("project-id", "validProjectId").field("title", "short description")
-//					.field("description", "long description").field("status", "planned").field("priority", "high")
-//					.field("expected-time", "12:00").field("additional-time", "15:00")
-//					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
-//
-//			assertEquals("{\"message\":\"activity changed\"}", jsonResponse.getBody().toString());
-//			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidEditActivity1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/invalidKey")
-//					.header("accept", "application/json").field("activity-id", "validActivityId")
-//					.field("project-id", "ValidProjectId").field("title", "short description")
-//					.field("description", "long description").field("status", "planned").field("priority", "high")
-//					.field("expected-time", "12:00").field("additional-time", "15:00")
-//					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
-//
-//			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidEditActivity2() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validKey")
-//					.header("accept", "application/json").field("activity-id", "invalidActivityId")
-//					.field("project-id", "validProjectId").field("title", "short description")
-//					.field("description", "long description").field("status", "planned").field("priority", "high")
-//					.field("expected-time", "12:00").field("additional-time", "15:00")
-//					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
-//
-//			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testInvalidEditActivity3() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest.put("http://localhost:4567/activity/validKey")
-//					.header("accept", "application/json").field("activity-id", "validActivityId")
-//					.field("project-id", "invalidProjectId").field("title", "short description")
-//					.field("description", "long description").field("status", "planned").field("priority", "high")
-//					.field("expected-time", "12:00").field("additional-time", "15:00")
-//					.field("sprint-id", "validSprintID").field("user-id", "user").asJson();
-//
-//			assertEquals("{\"message\":\"project does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testValidDelete1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest
-//					.delete("http://localhost:4567/activity/validActivityId/validKey")
-//					.header("accept", "application/json").asJson();
-//
-//			assertEquals("{\"message\":\"activity deleted\"}", jsonResponse.getBody().toString());
-//			assertEquals("200", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testinValidDelete1() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest
-//					.delete("http://localhost:4567/activity/validActivityId/invalidUserKey")
-//					.header("accept", "application/json").asJson();
-//
-//			assertEquals("{\"message\":\"key does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("401", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testinValidDelete2() {
-//		try {
-//			HttpResponse<JsonNode> jsonResponse = Unirest
-//					.delete("http://localhost:4567/activity/invalidActivityId/validKey")
-//					.header("accept", "application/json").asJson();
-//
-//			assertEquals("{\"message\":\"activity does not exist\"}", jsonResponse.getBody().toString());
-//			assertEquals("404", String.valueOf(jsonResponse.getStatus()));
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	
+	// Create a sprint - with a project id that does not exist
+
+	@Test
+	public void testInvalidCreateSprint2() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		
+		String projectName = "validyActivityName";
+		String projectId = "invalid";
+		String title = "sprint1";
+		String index = "1";
+	
+		login(username, password);
+		createProject(projectName, key);
+		
+		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
+		
+		String expectedBody = "{\"message\":\"project does not exist\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Get activity
+
+	@Test
+	public void testValidGetActivity1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "validActivityId";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = getActivity(activityId, key);
+		
+		String expectedBody = "{\"additional-time\":\"xxx\","
+							+ "\"sprint-id\":\"xxx\","
+							+ "\"user-id\":\"xxx\","
+							+ "\"description\":\"xxx\","
+							+ "\"expected-time\":\"xxx\","
+							+ "\"activity-id\":\"xxx\","
+							+ "\"project-id\":\"xxx\","
+							+ "\"title\":\"xxx\","
+							+ "\"priority\":\"xxx\","
+							+ "\"status\":\"xxx\"}";
+		
+		String expectedStatus = "200";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+
+
+	@Test
+	public void testInvalidGetActivity1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = "invalid";
+		String activityId = "validActivityId";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = getActivity(activityId, key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+
+	@Test
+	public void testInvalidGetActivity2() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "invalidActivityId";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = getActivity(activityId, key);
+		
+		String expectedBody = "{\"message\":\"activity does not exist\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change activity
+
+	@Test
+	public void testValidEditActivity1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "validActivityId";
+		String projectId = "validProjectId";
+		String title = "short description";
+		String description = "long description";
+		String status = "planned";
+		String priority = "high";
+		String expectedTime = "12:00";
+		String additionalTime = "15:00";
+		String sprintId = "validSprintID";
+		String userId = "user";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = changeActivity(activityId, projectId, title, description, 
+							status, priority, expectedTime, additionalTime, sprintId, userId, key);
+		
+		String expectedBody = "{\"message\":\"activity changed\"}";
+		String expectedStatus = "200";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change activity - with invalid key
+
+	@Test
+	public void testInvalidEditActivity1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = "invalid";
+		String activityId = "validActivityId";
+		String projectId = "validProjectId";
+		String title = "short description";
+		String description = "long description";
+		String status = "planned";
+		String priority = "high";
+		String expectedTime = "12:00";
+		String additionalTime = "15:00";
+		String sprintId = "validSprintID";
+		String userId = "user";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = changeActivity(activityId, projectId, title, description, 
+							status, priority, expectedTime, additionalTime, sprintId, userId, key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change activity - with invalid activity id
+
+	@Test
+	public void testInvalidEditActivity2() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "invalid";
+		String projectId = "validProjectId";
+		String title = "short description";
+		String description = "long description";
+		String status = "planned";
+		String priority = "high";
+		String expectedTime = "12:00";
+		String additionalTime = "15:00";
+		String sprintId = "validSprintID";
+		String userId = "user";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = changeActivity(activityId, projectId, title, description, 
+							status, priority, expectedTime, additionalTime, sprintId, userId, key);
+		
+		String expectedBody = "{\"message\":\"activity does not exist\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Change activity - with invalid project id
+
+	@Test
+	public void testInvalidEditActivity3() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "validActivityId";
+		String projectId = "invalid";
+		String title = "short description";
+		String description = "long description";
+		String status = "planned";
+		String priority = "high";
+		String expectedTime = "12:00";
+		String additionalTime = "15:00";
+		String sprintId = "validSprintID";
+		String userId = "user";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = changeActivity(activityId, projectId, title, description, 
+							status, priority, expectedTime, additionalTime, sprintId, userId, key);
+		
+		String expectedBody = "{\"message\":\"project does not exist\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Remove an activity
+
+	@Test
+	public void testValidDelete1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "validActivityId";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = removeActivity(activityId, key);
+		
+		String expectedBody = "{\"message\":\"activity deleted\"}";
+		String expectedStatus = "200";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Remove an activity - with invalid key
+
+	@Test
+	public void testinValidDelete1() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = "invalid";
+		String activityId = "validActivityId";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = removeActivity(activityId, key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
+	
+	// Remove an activity - with invalid activity id
+
+	@Test
+	public void testinValidDelete2() {
+		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String activityId = "invalid";
+		
+		login(username, password);
+		HttpResponse<JsonNode> response = removeActivity(activityId, key);
+		
+		String expectedBody = "{\"message\":\"activity does not exist\"}";
+		String expectedStatus = "404";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
 	
 	
 	
@@ -797,7 +920,7 @@ public class TestApiV1 {
 	
 	
 	
-	// Private methods
+	// Private methods for calls to API
 	
 	private HttpResponse<JsonNode> login(String username, String password) {
 		HttpResponse<JsonNode> response = null;
@@ -888,4 +1011,52 @@ public class TestApiV1 {
 			}
 		 	return response;
 	}
+	
+	private HttpResponse<JsonNode> getActivity(String activityId, String key) {
+		HttpResponse<JsonNode> response = null;
+			try {
+				response = Unirest
+							.get("http://localhost:4567/activity/" + activityId + "/" + key)
+							.header("accept", "application/json").asJson();
+			} catch (UnirestException e) {
+				e.printStackTrace();
+			}
+			return response;
+	}
+	
+	private HttpResponse<JsonNode> changeActivity(String activityId, String projectId, String title, String description, String status, String priority, String expectedTime, String additionalTime, String sprintId, String userId, String key) {
+		HttpResponse<JsonNode> response = null;
+		
+		try {
+			response = Unirest.put("http://localhost:4567/activity/" + key)
+						.header("accept", "application/json")
+						.field("activity-id", activityId)
+						.field("project-id", projectId)
+						.field("title", title)
+						.field("description", description)
+						.field("status", status)
+						.field("priority", priority)
+						.field("expected-time", expectedTime)
+						.field("additional-time", additionalTime)
+						.field("sprint-id", sprintId)
+						.field("user-id", userId).asJson();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	private HttpResponse<JsonNode> removeActivity(String activityId, String key) {
+		HttpResponse<JsonNode> response = null;
+		
+		try {
+			response = Unirest
+					.delete("http://localhost:4567/activity/" + activityId + "/" + key)
+					.header("accept", "application/json").asJson();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
 }
