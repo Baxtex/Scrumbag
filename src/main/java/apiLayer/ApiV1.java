@@ -38,19 +38,24 @@ public class ApiV1 {
 	private final int OPERATION_AUTHORIZATION = 4;
 	private final int OPERATION_CREATEUSER = 5;
 	
-	
-	private final DataHandler dataHandler = new DataHandler();
-	private final Security security = new Security();
-	private final Get get = new Get(dataHandler);
-	private final Post post = new Post(dataHandler);
-	private final Put put = new Put(dataHandler);
-	private final Delete delete = new Delete(dataHandler);
+	private final Get get;
+	private final Post post;
+	private final Put put;
+	private final Delete delete;
+	private final Security security;
 
 	public static void main(String[] args) {
 		new ApiV1();
 	}
 
 	public ApiV1() {
+		
+		DataHandler dataHandler = new DataHandler();
+		get = new Get(dataHandler);
+		post = new Post(dataHandler);
+		put = new Put(dataHandler);
+		delete = new Delete(dataHandler);
+		security = new Security();
 		
 		setupGetEndpoints();
 		setupPostEndpoints();
@@ -61,28 +66,33 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for get requests.
 	 */
+	
 	private void setupGetEndpoints() {
+		
+		// Get activities from a certain project
 
 		get("/activities/:project-id/:key", (req, res) -> {
 			
 			String key = req.params(":key");
+			String projectId = req.params(":project-id");
 			
 			if(!security.isValidKey(key)) {
 				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				String projectId = req.params(":project-id");
 				return get.getActivities(projectId, res);
 			}
 		});
+		
+		// Get a certain activity
 
 		get("/activity/:activity-id/:key", (req, res) -> {
 			
 			String key = req.params(":key");
-			
+			String activityId = req.params(":activity-id");
+
 			if(!security.isValidKey(key)) {
 				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
-				String activityId = req.params(":activity-id");
 				return get.getActivity(activityId, res);
 			}
 		});
@@ -93,6 +103,8 @@ public class ApiV1 {
 	 */
 	
 	private void setupPostEndpoints() {
+		
+		// Login user
 
 		post("/login", (req, res) -> {
 			
@@ -106,6 +118,8 @@ public class ApiV1 {
 				return createSuccessMsg(OPERATION_LOGIN, key, res);
 			}
 		});
+		
+		// Logout user
 
 		post("/logout/:key", (req, res) -> {
 			
@@ -117,6 +131,8 @@ public class ApiV1 {
 				return createSuccessMsg(OPERATION_LOGOUT, key, res);
 			}
 		});
+		
+		// Create a user
 
 		post("/user/:key", (req, res) -> {
 			
@@ -137,6 +153,8 @@ public class ApiV1 {
 				return createSuccessMsg(OPERATION_CREATEUSER, username, res);
 			}
 		});
+		
+		// Create a project
 
 		post("/project/:key", (req, res) -> {
 			
@@ -151,6 +169,8 @@ public class ApiV1 {
 				return post.createProject(req.queryParams("project-name"), res);
 			}
 		});
+		
+		// Create a sprint
 
 		post("/sprint/:key", (req, res) -> {
 			
@@ -171,7 +191,10 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for put requests.
 	 */
+	
 	private void setupPutEndpoints() {
+		
+		// Change a project
 
 		put("/project/:key", (req, res) -> {
 			
@@ -186,6 +209,8 @@ public class ApiV1 {
 				return put.userManagement(projectId, action, userIds, res);
 			}
 		});
+		
+		// Change an activity
 
 		put("/activity/:key", (req, res) -> {
 			
@@ -214,7 +239,10 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for delete requests.
 	 */
+	
 	private void setupDeleteEndpoints() {
+		
+		// Remove an activity
 
 		delete("/activity/:activity-id/:key", (req, res) -> {
 			

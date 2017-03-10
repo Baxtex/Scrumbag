@@ -19,8 +19,10 @@ public class Security {
 	// To generate test keys, this main method will be removed.
 	public static void main(String[] args) {
 		Security s = new Security();
-		String key = s.generateKey("adminUsername", "adminPassword");
-		System.out.println(key);
+		String keyAdmin = s.generateKey("adminUsername", "adminPassword");
+		String keyUser = s.generateKey("unauthorizedUsername", "unauthorizedPassword");
+		System.out.println("Adminkey: " + keyAdmin);
+		System.out.println("Userkey: " + keyUser);
 	}
 	
 	private final int AUTHORITY_ADMIN = 1;
