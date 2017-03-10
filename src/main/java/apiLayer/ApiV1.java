@@ -28,9 +28,9 @@ public class ApiV1 {
 	
 	private final int STATUSCODE_OK = 200;
 	private final int STATUSCODE_CREATED = 201;
-	private final int STATUSCODE_INVALID = 401;				// Resursen finns inte
-	private final int STATUSCODE_UNAUTHORIZED = 403;		// Resursen finns, men får inte
-	private final int STATUSCODE_DUPLICATE = 409;			// Resursen finns redan
+	private final int STATUSCODE_INVALID = 401;		
+	private final int STATUSCODE_UNAUTHORIZED = 403;	
+	private final int STATUSCODE_DUPLICATE = 409;			
 	
 	private final int OPERATION_LOGIN = 0;
 	private final int OPERATION_LOGOUT = 1;
@@ -77,7 +77,7 @@ public class ApiV1 {
 			String projectId = req.params(":project-id");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				return get.getActivities(projectId, res);
 			}
@@ -91,7 +91,7 @@ public class ApiV1 {
 			String activityId = req.params(":activity-id");
 
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				return get.getActivity(activityId, res);
 			}
@@ -113,9 +113,9 @@ public class ApiV1 {
 			String key = security.login(username, password);
 			
 			if(key == null) {
-				return createErrorMsg(OPERATION_LOGIN, username,  res);
+				return security.createErrorMsg(OPERATION_LOGIN, username,  res);
 			} else {
-				return createSuccessMsg(OPERATION_LOGIN, key, res);
+				return security.createSuccessMsg(OPERATION_LOGIN, key, res);
 			}
 		});
 		
@@ -126,9 +126,9 @@ public class ApiV1 {
 			String key = req.params(":key");
 			
 			if(!security.logout(key)) {
-				return createErrorMsg(OPERATION_LOGOUT, key, res);
+				return security.createErrorMsg(OPERATION_LOGOUT, key, res);
 			} else {
-				return createSuccessMsg(OPERATION_LOGOUT, key, res);
+				return security.createSuccessMsg(OPERATION_LOGOUT, key, res);
 			}
 		});
 		
@@ -142,15 +142,15 @@ public class ApiV1 {
 			String authority = req.queryParams("authority");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			}
 			if(!security.hasAdminAuthority(key)) {
-				return createErrorMsg(OPERATION_AUTHORIZATION, key, res);
+				return security.createErrorMsg(OPERATION_AUTHORIZATION, key, res);
 			}	
 			if(!security.createUser(username, password, authority)) {
-				return createErrorMsg(OPERATION_CREATEUSER, username, res);
+				return security.createErrorMsg(OPERATION_CREATEUSER, username, res);
 			} else {
-				return createSuccessMsg(OPERATION_CREATEUSER, username, res);
+				return security.createSuccessMsg(OPERATION_CREATEUSER, username, res);
 			}
 		});
 		
@@ -162,10 +162,10 @@ public class ApiV1 {
 			String projectName = req.queryParams("project-name");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			}
 			if(!security.hasAdminAuthority(key)) {
-				return createErrorMsg(OPERATION_AUTHORIZATION, key, res);
+				return security.createErrorMsg(OPERATION_AUTHORIZATION, key, res);
 			} else {
 				return post.createProject(projectName, res);
 			}
@@ -178,7 +178,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
 				String sprintTitle = req.queryParams("title");
@@ -201,7 +201,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
 				String action = req.queryParams("action");
@@ -217,7 +217,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String activityId = req.queryParams("activity-id");
 				String projectId = req.queryParams("project-id");
@@ -249,103 +249,11 @@ public class ApiV1 {
 			String key = req.params(":key");
 			
 			if(!security.isValidKey(key)) {
-				return createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String activityId = req.params(":activity-id");
 				return delete.deleteActivity(activityId, res);
 			}
 		});
-	}
-	
-	/**
-	 * Returns a JSON object with error information depending on operation.
-	 * @param operation during which the error occurred
-	 * @param data relevant data to the error
-	 * @param res the response header
-	 * @return
-	 */
-	
-	public JSONObject createErrorMsg(int operation, Object data, Response res) {
-		JSONObject json = new JSONObject();
-		res.type("application/json");
-		
-		try {
-			switch(operation) {
-				case OPERATION_LOGIN: {
-					json.put("Message", "Failed to log in.");
-					json.put("Username", data);
-					res.status(STATUSCODE_INVALID);
-					break;
-				}
-				case OPERATION_LOGOUT: {
-					json.put("Message", "Failed to log out.");
-					json.put("Key", data);
-					res.status(STATUSCODE_INVALID);
-					break;
-				}
-				case OPERATION_VALIDATEKEY: {
-					json.put("Message", "Key is invalid.");
-					json.put("Key", data);
-					res.status(STATUSCODE_INVALID);
-					break;
-				}
-				case OPERATION_AUTHORIZATION: {
-					json.put("Message", "User is unauthorized to do this.");
-					json.put("Key", data);
-					res.status(STATUSCODE_UNAUTHORIZED);
-					break;
-				}
-				case OPERATION_CREATEUSER: {
-					json.put("Message", "Could not create user. Username is taken.");
-					json.put("Username", data);
-					res.status(STATUSCODE_DUPLICATE);
-					break;
-				}
-			}
-		} catch (JSONException e) {
-			System.out.println("Failed when adding stuff to JSON object.");
-		}
-
-		return json;
-	}
-	
-	/**
-	 * Returns a JSON object with success information depending on operation.
-	 * @param operation during which the error occurred
-	 * @param data relevant data to the error
-	 * @param res the response header
-	 * @return
-	 */
-	
-	public JSONObject createSuccessMsg(int operation, Object data, Response res) {
-		JSONObject json = new JSONObject();
-		res.type("application/json");
-		
-		try {
-			switch(operation) {
-				case OPERATION_LOGIN: {
-					json.put("Message", "Successfully logged in.");
-					json.put("Key", data);
-					res.status(STATUSCODE_CREATED);
-					break;
-				}
-				case OPERATION_LOGOUT: {
-					json.put("Message", "Succefully logged out.");
-					json.put("Key", data);
-					res.status(STATUSCODE_OK);
-					break;
-				}
-				case OPERATION_CREATEUSER: {
-					json.put("Message", "User was successfully created.");
-					json.put("Username", data);
-					res.status(STATUSCODE_CREATED);
-					break;
-				}
-			}
-		} catch (JSONException e) {
-			System.out.println("Failed when adding stuff to JSON object.");
-		}
-		
-		return json;
 	}
 }

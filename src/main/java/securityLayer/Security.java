@@ -2,10 +2,12 @@ package securityLayer;
 
 import java.util.Enumeration;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import securityDB.SecurityDBHandler;
 import securityDB.Session;
+import spark.Response;
 
 /**
  * This class is keeping track of users offline and online. It is communicating with a
@@ -15,6 +17,18 @@ import securityDB.Session;
  */
 
 public class Security {
+	
+	private final int STATUSCODE_OK = 200;
+	private final int STATUSCODE_CREATED = 201;
+	private final int STATUSCODE_INVALID = 401;		
+	private final int STATUSCODE_UNAUTHORIZED = 403;	
+	private final int STATUSCODE_DUPLICATE = 409;			
+	
+	private final int OPERATION_LOGIN = 0;
+	private final int OPERATION_LOGOUT = 1;
+	private final int OPERATION_VALIDATEKEY = 3;
+	private final int OPERATION_AUTHORIZATION = 4;
+	private final int OPERATION_CREATEUSER = 5;
 	
 	// To generate test keys, this main method will be removed.
 	public static void main(String[] args) {
@@ -179,5 +193,96 @@ public class Security {
 	private void refreshTimestamp(String key) {
 		long timestamp = System.currentTimeMillis();
 		dbHandler.setTimestamp(key, timestamp);
+	}
+	
+	/**
+	 * Returns a JSON object with error information depending on operation.
+	 * @param operation during which the error occurred
+	 * @param data relevant data to the error
+	 * @param res the response header
+	 * @return
+	 */
+	
+	public JSONObject createErrorMsg(int operation, Object data, Response res) {
+		JSONObject json = new JSONObject();
+		res.type("application/json");
+		
+		try {
+			switch(operation) {
+				case OPERATION_LOGIN: {
+					json.put("Message", "Failed to log in.");
+					json.put("Username", data);
+					res.status(STATUSCODE_INVALID);
+					break;
+				}
+				case OPERATION_LOGOUT: {
+					json.put("Message", "Failed to log out.");
+					json.put("Key", data);
+					res.status(STATUSCODE_INVALID);
+					break;
+				}
+				case OPERATION_VALIDATEKEY: {
+					json.put("Message", "Key is invalid.");
+					json.put("Key", data);
+					res.status(STATUSCODE_INVALID);
+					break;
+				}
+				case OPERATION_AUTHORIZATION: {
+					json.put("Message", "User is unauthorized to do this.");
+					json.put("Key", data);
+					res.status(STATUSCODE_UNAUTHORIZED);
+					break;
+				}
+				case OPERATION_CREATEUSER: {
+					json.put("Message", "Could not create user. Username is taken.");
+					json.put("Username", data);
+					res.status(STATUSCODE_DUPLICATE);
+					break;
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println("Failed when adding stuff to JSON object.");
+		}
+
+		return json;
+	}
+	
+	/**
+	 * Returns a JSON object with success information depending on operation.
+	 * @param operation during which the error occurred
+	 * @param data relevant data to the error
+	 * @param res the response header
+	 * @return
+	 */
+	
+	public JSONObject createSuccessMsg(int operation, Object data, Response res) {
+		JSONObject json = new JSONObject();
+		res.type("application/json");
+		
+		try {
+			switch(operation) {
+				case OPERATION_LOGIN: {
+					json.put("Message", "Successfully logged in.");
+					json.put("Key", data);
+					res.status(STATUSCODE_CREATED);
+					break;
+				}
+				case OPERATION_LOGOUT: {
+					json.put("Message", "Succefully logged out.");
+					json.put("Key", data);
+					res.status(STATUSCODE_OK);
+					break;
+				}
+				case OPERATION_CREATEUSER: {
+					json.put("Message", "User was successfully created.");
+					json.put("Username", data);
+					res.status(STATUSCODE_CREATED);
+					break;
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println("Failed when adding stuff to JSON object.");
+		}
+		return json;
 	}
 }
