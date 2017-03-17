@@ -17,7 +17,7 @@ public class Get {
 		JSONObject jObj = new JSONObject();
 		try {
 			if (dataHandler.checkProjectId(pID)) {
-				dataHandler.getActivities();
+				Activity[] activities = dataHandler.getActivities(pID);
 				jObj.put("activity-id", "abcdf");
 				jObj.put("title", "this is a valid activity");
 				jObj.put("status", "planned");
