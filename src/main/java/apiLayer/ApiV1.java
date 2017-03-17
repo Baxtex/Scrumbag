@@ -13,8 +13,6 @@ import businessLayer.Get;
 import businessLayer.Post;
 import businessLayer.Put;
 import dataLayer.DataHandler;
-import dataLayer.DataHandler.Priority;
-import dataLayer.DataHandler.Status;
 import securityLayer.Security;
 import spark.Response;
 
@@ -169,25 +167,25 @@ public class ApiV1 {
 		
 		// Create an activity
 		
-//		post("/sprint/:key", (req, res) -> {
-//			
-//			String key = req.params(":key");
-//			
-//			if(!security.isValidKey(key)) {
-//				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
-//			} else {
-//				String projectId = req.queryParams("project-id");
-//				String sprintId = req.queryParams("sprint-id");
-//				String title = req.queryParams("title");
-//				String description = req.queryParams("description");
-//				String timeExpected = req.queryParams("timeExpected");
-//				String timeSpent = req.queryParams("timeSpent");
-//				String respUser = req.queryParams("respUser");
-//				String status = req.queryParams("status");
-//				String priority = req.queryParams("priority");
-//				return post.createActivity(projectId, sprintId, title, description, timeExpected, timeSpent, respUser, status, priority, res);
-//			}
-//		});
+		post("/sprint/:key", (req, res) -> {
+			
+			String key = req.params(":key");
+			
+			if(!security.isValidKey(key)) {
+				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
+			} else {
+				String projectId = req.queryParams("project-id");
+				String sprintId = req.queryParams("sprint-id");
+				String title = req.queryParams("title");
+				String description = req.queryParams("description");
+				String timeExpected = req.queryParams("timeExpected");
+				String timeSpent = req.queryParams("timeSpent");
+				String respUser = req.queryParams("respUser");
+				String status = req.queryParams("status");
+				String priority = req.queryParams("priority");
+				return post.createActivity(projectId, sprintId, title, description, timeExpected, timeSpent, respUser, status, priority, res);
+			}
+		});
 		
 
 		

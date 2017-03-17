@@ -1,5 +1,6 @@
 package dataLayer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -30,10 +31,28 @@ public class DataHandler {
 		activities = new LinkedList<Activity>();
 		sprints = new LinkedList<Sprint>();
 		users = new LinkedList<User>();
-		statuses = (LinkedList) Arrays.asList("unplanned", "not-started", "started", "for-test", "done", "impediments");
-		priorities = (LinkedList) Arrays.asList("low", "medium", "high", "undefined");
-		
-
+		statuses = getStatuses();
+		priorities = getPriorities();
+	}
+	 
+	private LinkedList<String> getStatuses() {
+		LinkedList<String> statuses = new LinkedList<String>();
+		statuses.add("unplanned");
+		statuses.add("not-started");
+		statuses.add("started");
+		statuses.add("for-test");
+		statuses.add("done");
+		statuses.add("impediments");
+		return statuses;
+	}
+	
+	private LinkedList<String> getPriorities() {
+		LinkedList<String> priorities = new LinkedList<String>();
+		priorities.add("low");
+		priorities.add("medium");
+		priorities.add("high");
+		priorities.add("undefined");
+		return priorities;
 	}
 	
 	/** 
