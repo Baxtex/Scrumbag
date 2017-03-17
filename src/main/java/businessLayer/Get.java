@@ -1,7 +1,9 @@
 package businessLayer;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
+import dataLayer.Activity;
 import dataLayer.DataHandler;
 import spark.Response;
 
@@ -17,10 +19,17 @@ public class Get {
 		JSONObject jObj = new JSONObject();
 		try {
 			if (dataHandler.checkProjectId(pID)) {
-				dataHandler.getActivities();
-				jObj.put("activity-id", "abcdf");
-				jObj.put("title", "this is a valid activity");
-				jObj.put("status", "planned");
+				Activity[] activities = dataHandler.getActivities(pID);
+				JSONArray jsonArray = new JSONArray();
+				for(int i = 0; i < activities.length; i++){
+					JSONObject jObjActivity = new JSONObject();
+					jObjActivity.put("activity-id", activities[i].getActivityId());
+					jObjActivity.put("title", activities[i].getTitle());
+					jObjActivity.put("status", activities[i].getStatus());
+					jsonArray.put(jObjActivity);
+				}
+				jObj.put("project-id", pID);
+				jObj.put("activities", jsonArray);
 				res.status(200);
 			} else {
 				jObj.put("message", "activity does not exist");
@@ -35,19 +44,19 @@ public class Get {
 
 	public JSONObject getActivity(String aID, Response res) {
 		JSONObject jObj = new JSONObject();
+		Activity activity;
 		try {
 			if (dataHandler.checkActivityId(aID)) {
-				dataHandler.getActivity();
-				jObj.put("activity-id", "xxx");
-				jObj.put("project-id", "xxx");
-				jObj.put("title", "xxx");
-				jObj.put("description", "xxx");
-				jObj.put("status", "xxx");
-				jObj.put("priority", "xxx");
-				jObj.put("expected-time", "xxx");
-				jObj.put("additional-time", "xxx");
-				jObj.put("sprint-id", "xxx");
-				jObj.put("user-id", "xxx");
+				activity = dataHandler.getActivity(aID);
+				jObj.put("activity-id", activity.getActivityId());
+				jObj.put("project-id", activity.getProjectId());
+				jObj.put("title", activity.getTitle());
+				jObj.put("description", activity.getDescription());
+				jObj.put("status", activity.getStatus());
+				jObj.put("priority", activity.getPriority());
+				jObj.put("expected-time", activity.getTimeExpected());
+				jObj.put("sprint-id", activity.getSprintId());
+				jObj.put("user-id", activity.getRespUser());
 				res.status(200);
 			} else {
 				jObj.put("message", "activity does not exist");
