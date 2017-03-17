@@ -185,7 +185,7 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 	
-	// Create user that with user name that is already taken
+	// Create user with user name that is already taken
 	
 	@Test
 	public void testInvalidCreateUser3() {
@@ -668,7 +668,7 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 	
-
+	// Get activity - with invalid key
 
 	@Test
 	public void testInvalidGetActivity1() {
@@ -690,6 +690,8 @@ public class TestApiV1 {
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
+	
+	// Get activity - with invalid activity id
 
 	@Test
 	public void testInvalidGetActivity2() {
@@ -857,7 +859,7 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = removeActivity(activityId, key);
 		
-		String expectedBody = "{\"message\":\"activity deleted\"}";
+		String expectedBody = "{\"Message\":\"Successfully removed activity.\"}";
 		String expectedStatus = "200";
 		
 		String resultBody = response.getBody().toString();
@@ -903,7 +905,7 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = removeActivity(activityId, key);
 		
-		String expectedBody = "{\"message\":\"activity does not exist\"}";
+		String expectedBody = "{\"Message\":\"Failed to remove activity. It seems it does not exist.\"}";
 		String expectedStatus = "404";
 		
 		String resultBody = response.getBody().toString();
@@ -912,6 +914,7 @@ public class TestApiV1 {
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
+	
 	
 	
 	
