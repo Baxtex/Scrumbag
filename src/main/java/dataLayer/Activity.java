@@ -1,5 +1,8 @@
 package dataLayer;
 
+import dataLayer.DataHandler.Priority;
+import dataLayer.DataHandler.Status;
+
 public class Activity {
 	
 	private String activityId;
@@ -14,6 +17,9 @@ public class Activity {
 	private String timeSpent;
 	
 	private String respUser;
+	
+	private Status status;
+	private Priority priority;
 	
 	
 	public Activity(){
@@ -82,6 +88,30 @@ public class Activity {
 	
 	public void setRespUser(String respUser) {
 		this.respUser = respUser;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
 	}
 	
 }

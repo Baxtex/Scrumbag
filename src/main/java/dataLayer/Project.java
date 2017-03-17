@@ -12,8 +12,9 @@ public class Project {
 	
 	private LinkedList<String> users;
 	
-	public Project(){
-		
+	public Project(String projectId, String elementId
+			, String projectName){
+		this
 	}
 	
 	public String getProjectId() {
