@@ -8,7 +8,7 @@ import spark.Response;
 
 /**
  * This module handles all requests that has to do with removing a resource from the system.
- * @author Anton Gustafsson, Kajsa Ornstein.
+ * @author Anton Gustafsson, Kajsa Ornstein
  *
  */
 
