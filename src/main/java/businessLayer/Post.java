@@ -17,8 +17,8 @@ public class Post {
 		JSONObject jObj = new JSONObject();
 		try {
 			if (dataHandler.checkProjectName(projectName)) {
-				dataHandler.createProject();
-				jObj.put("project-id", "XXX");
+				String proj = dataHandler.createProject(projectName);
+				jObj.put("project-id", proj);
 				res.status(201);
 			} else {
 				jObj.put("message", "not allowed");
@@ -35,8 +35,8 @@ public class Post {
 		JSONObject jObj = new JSONObject();
 		try {
 			if (dataHandler.checkProjectId(pID)) {
-				dataHandler.createSprint();
-				jObj.put("sprint-id", "xxx");
+				String sprint = dataHandler.createSprint(pID, title, Integer.parseInt(index));
+				jObj.put("sprint-id", sprint);
 				res.status(201);
 			} else {
 				jObj.put("message", "project does not exist");
