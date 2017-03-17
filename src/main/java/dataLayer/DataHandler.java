@@ -1,5 +1,6 @@
 package dataLayer;
 
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
@@ -16,19 +17,12 @@ public class DataHandler {
 	
 	private int idCounter;
 	
-	public enum Status {	
-		UNPLANNED, NOT_STARTED, STARTED, FOR_TEST,
-		DONE, IMPEDIMENTS
-	}
-	
-	public enum Priority {
-		LOW, MEDIUM, HIGH, UNDEFINED
-	}
-	
 	private LinkedList<Project> projects;
 	private LinkedList<Activity> activities;
 	private LinkedList<Sprint> sprints;
 	private LinkedList<User> users;
+	private LinkedList<String> statuses;
+	private LinkedList<String> priorities;
 	
 	public DataHandler(){
 		idCounter = 0;
@@ -36,9 +30,13 @@ public class DataHandler {
 		activities = new LinkedList<Activity>();
 		sprints = new LinkedList<Sprint>();
 		users = new LinkedList<User>();
+		statuses = (LinkedList) Arrays.asList("unplanned", "not-started", "started", "for-test", "done", "impediments");
+		priorities = (LinkedList) Arrays.asList("low", "medium", "high", "undefined");
+		
+
 	}
 	
-	/**
+	/** 
 	 * Activity
 	 */
 	
@@ -53,7 +51,8 @@ public class DataHandler {
 	
 	public String createActivity(String projectID,
 			String sprintID, String title, String description, String timeExpected,
-			String timeSpent, String respUser, Status status, Priority priority){
+			String timeSpent, String respUser, String status, String priority){
+		
 		Activity activity = new Activity((idCounter++)+"", projectID, sprintID, title
 				, description, timeExpected, timeSpent, respUser, status, priority);
 		return activity.getActivityId();
@@ -61,7 +60,7 @@ public class DataHandler {
 	}
 	
 	public void editActivity(String activityID, String projectID, String title, String description, 
-			String timeExpected,String timeSpent, String respUser, Status status, Priority priority){
+			String timeExpected,String timeSpent, String respUser, String status, String priority){
 		Activity a = getActivity(activityID);
 		a.setProjectId(projectID);
 		a.setTitle(title);
@@ -224,6 +223,14 @@ public class DataHandler {
 			}
 		}
 		return false;
+	}
+	
+	public boolean isValidStatus(String status) {
+		return statuses.contains(status);
+	}
+	
+	public boolean isValidPriority(String priority) {
+		return priorities.contains(priority);
 	}
 	
 }
