@@ -14,7 +14,7 @@ import spark.Response;
 
 public class Delete {
 	
-	private final int OPERATION_ACTIVITY = 0;
+	private final int OPERATION_DELETE_ACTIVITY = 0;
 	private final int STATUSCODE_OK = 200;
 	private final int STATUSCODE_NO_RESOURCE = 404;		
 
@@ -34,10 +34,10 @@ public class Delete {
 	public JSONObject deleteActivity(String activityId, Response res) {
 		
 		if (dataHandler.checkActivityId(activityId)) {
-			dataHandler.deleteActivity();
-			return createSuccessMessage(OPERATION_ACTIVITY, activityId, res);
+			dataHandler.deleteActivity(activityId);
+			return createSuccessMessage(OPERATION_DELETE_ACTIVITY, activityId, res);
 		} else {
-			return createErrorMessage(OPERATION_ACTIVITY, activityId, res);
+			return createErrorMessage(OPERATION_DELETE_ACTIVITY, activityId, res);
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class Delete {
 		res.type("application/json");
 		try {
 			switch(operation) {
-				case OPERATION_ACTIVITY: {
+				case OPERATION_DELETE_ACTIVITY: {
 					json.put("Message", "Successfully removed activity.");
 					json.put("Activity-ID", data);
 					res.status(STATUSCODE_OK);
@@ -80,7 +80,7 @@ public class Delete {
 		res.type("application/json");
 		try {
 			switch(operation) {
-				case OPERATION_ACTIVITY: {
+				case OPERATION_DELETE_ACTIVITY: {
 					json.put("Message", "Failed to remove activity. It seems it does not exist.");
 					json.put("Activity-ID", data);
 					res.status(STATUSCODE_NO_RESOURCE);
