@@ -95,17 +95,37 @@ public class DataHandler {
 
 	public Activity[] getActivities(String pID) {
 		int arrSize = 0;
+		int arrIndex = 0;
 		Activity[] rArr;
 		Activity tmp;
 		
 		for(int i = 0; i < activities.size(); i++){
-			tmp = activities
+			tmp = activities.get(i);
+			if(tmp.getProjectId().equals(pID)){
+				arrSize++;
+			}
 		}
-		return (Activity[]) activities.toArray();
+		
+		rArr = new Activity[arrSize];
+		
+		for(int i = 0; i < activities.size(); i++){
+			tmp = activities.get(i);
+			if(tmp.getProjectId().equals(pID)){
+				rArr[arrIndex++] = tmp;
+				
+			}
+		}
+		return rArr;
 	}
 
-	public void getActivity() {
-		// TODO Auto-generated method stub
+	public Activity getActivity(String aID) {
+		Activity rActivity = null;
+		for(int i = 0; i < activities.size(); i++){
+			if(activities.get(i).getActivityId().equals(aID)){
+				rActivity = activities.get(i);				
+			}
+		}
+		return rActivity;
 	}
 
 	public void createProject() {

@@ -44,5 +44,13 @@ public class Sprint {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
 	
 }
