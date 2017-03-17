@@ -2,25 +2,21 @@ package dataLayer;
 
 public class User {
 	
-	private String userId;
 	private String elementId;
-	
 	private String name;
 	
+	public User(String userId, String name){
+		this.elementId = userId;
+		this.name = name;
+	}
+	
+	
 	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
+	public void setUserId(String userId) {
+		this.elementId = userId;
 	}
 
 	public String getName() {

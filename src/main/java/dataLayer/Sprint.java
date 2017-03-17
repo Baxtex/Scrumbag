@@ -3,14 +3,18 @@ package dataLayer;
 public class Sprint {
 	
 	private String sprintId;
-	private String elementId;
 	private String projectId;
 	
 	private String title;
 	private int index;
 	
-	public Sprint(){
+	public Sprint(String sprintId, String projectId
+			, String title, int index){
 		
+		this.sprintId = sprintId;
+		this.projectId = projectId;
+		this.title = title;
+		this.index = index;
 	}
 	
 	public String getSprintId() {
@@ -45,12 +49,4 @@ public class Sprint {
 		this.index = index;
 	}
 
-	public String getElementId() {
-		return elementId;
-	}
-
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
-	
 }

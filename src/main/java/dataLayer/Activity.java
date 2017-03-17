@@ -5,7 +5,6 @@ import dataLayer.DataHandler.Status;
 
 public class Activity {
 	
-	private String activityId;
 	private String elementId;
 	private String projectId;
 	private String sprintId;
@@ -22,16 +21,29 @@ public class Activity {
 	private Priority priority;
 	
 	
-	public Activity(){
+	public Activity(String activityID, String projectID,
+			String sprintID, String title, String description,
+			String timeExpected, String timeSpent, String respUser,
+			Status status, Priority priority){
 		
+		this.elementId = activityID;
+		this.projectId = projectID;
+		this.sprintId = sprintID;
+		this.title = title;
+		this.description = description;
+		this.timeExpected = timeExpected;
+		this.timeSpent = timeSpent;
+		this.respUser = respUser;
+		this.status = status;
+		this.priority = priority;
 	}
 	
 	public String getActivityId() {
-		return activityId;
+		return elementId;
 	}
 	
 	public void setActivityId(String activityId) {
-		this.activityId = activityId;
+		this.elementId = activityId;
 	}
 	
 	public String getProjectId() {
