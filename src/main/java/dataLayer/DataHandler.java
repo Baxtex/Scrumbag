@@ -110,7 +110,7 @@ public class DataHandler {
 		return rArr;
 	}
 
-	private Activity getActivity(String aID) {
+	public Activity getActivity(String aID) {
 		Activity rActivity = null;
 		for(int i = 0; i < activities.size(); i++) {
 			if(activities.get(i).getActivityId().equals(aID)){
