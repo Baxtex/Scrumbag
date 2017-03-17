@@ -6,6 +6,12 @@ import org.codehaus.jettison.json.JSONObject;
 import dataLayer.DataHandler;
 import spark.Response;
 
+/**
+ * This module handles all requests that has to do with removing a resource from the system.
+ * @author Anton Gustafsson, Kajsa Ornstein.
+ *
+ */
+
 public class Delete {
 	
 	private final int OPERATION_ACTIVITY = 0;
@@ -37,9 +43,9 @@ public class Delete {
 	
 	/**
 	 * Returns a success JSONObject corresponding to the specified operation and data.
-	 * @param operation
-	 * @param data
-	 * @param res
+	 * @param operation the kind of operation that has been successful
+	 * @param data some relevant data to be displayed in response message
+	 * @param res the response that is going to be sent back to client
 	 * @return
 	 */
 	
@@ -63,9 +69,9 @@ public class Delete {
 	
 	/**
 	 * Returns a error JSONObject corresponding to the specified operation and data.
-	 * @param operation
-	 * @param data
-	 * @param res
+	 * @param operation the kind of operation that has failed
+	 * @param data some relevant data to be displayed in response message
+	 * @param res the response that is going to be sent back to client
 	 * @return
 	 */
 	
