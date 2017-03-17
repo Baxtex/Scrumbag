@@ -160,12 +160,16 @@ public class DataHandler {
 		return tmp;
 	}
 
-	public String createSprint(String pID,String title, int index) {
+	public String createSprint(String pID, String title, int index) {
 		Sprint tmp = new Sprint((idCounter++) + "",pID,title,index);
 		sprints.add(tmp);
 		return tmp.getSprintId();
 	}
 	
+	
+	/**
+	 * User Methods
+	 */
 	public String createUser(String name) { 
 		User tmp = new User((idCounter++)+"",name);
 		users.add(tmp);
@@ -178,9 +182,6 @@ public class DataHandler {
 		p.addUser(u);
 	}
 	
-	/**
-	 * User Methods
-	 */
 	public boolean validateUser(String uID){
 		for(int i = 0; i < users.size(); i++){
 			if(users.get(i).getUserId().equals(uID)){
