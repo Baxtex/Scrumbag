@@ -158,6 +158,15 @@ public class DataHandler {
 		}
 		return tmp;
 	}
+	
+	public boolean checkSprint(String sID) {
+		for(int i = 0; i < sprints.size(); i++){
+			if(sprints.get(i).getSprintId().equals(sID)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public String createSprint(String pID, String title, int index) {
 		Sprint tmp = new Sprint((idCounter++) + "",pID,title,index);
