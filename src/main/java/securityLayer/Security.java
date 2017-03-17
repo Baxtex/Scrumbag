@@ -1,12 +1,9 @@
 package securityLayer;
 
-import java.util.Enumeration;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import securityDB.SecurityDBHandler;
-import securityDB.Session;
 import spark.Response;
 
 /**
@@ -29,6 +26,7 @@ public class Security {
 	private final int OPERATION_VALIDATEKEY = 3;
 	private final int OPERATION_AUTHORIZATION = 4;
 	private final int OPERATION_CREATEUSER = 5;
+	private final int AUTHORITY_ADMIN = 1;
 	
 	// To generate test keys, this main method will be removed.
 	public static void main(String[] args) {
@@ -39,14 +37,11 @@ public class Security {
 		System.out.println("Userkey: " + keyUser);
 	}
 	
-	private final int AUTHORITY_ADMIN = 1;
 	private final SecurityDBHandler dbHandler;
 	
 	public Security() {
 		this.dbHandler = new SecurityDBHandler();
 	}
-	
-	// Public interface
 	
 	/**
 	 * Returns a session key if login was successful, null if user is invalid.
@@ -126,9 +121,6 @@ public class Security {
 	public boolean createUser(String username, String password, String authority) {
 		return dbHandler.createUser(username, password, Integer.parseInt(authority));
 	}
-	
-	
-	// Private methods
 	
 	/**
 	 * Creates a new session.
