@@ -44,4 +44,12 @@ public class Project {
 		users.add(user);
 	}
 	
+	public void removeUser(User user){
+		for(int i = 0; i < users.size(); i++){
+			if(users.get(i).equals(user)){
+				users.remove(i);
+			}
+		}
+	}
+	
 }

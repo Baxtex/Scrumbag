@@ -182,6 +182,12 @@ public class DataHandler {
 		p.addUser(u);
 	}
 	
+	public void removeUserFromProject(String pID, String uID){
+		Project p = getProject(pID);
+		User u = getUser(uID);
+		p.removeUser(u);
+	}
+	
 	public boolean validateUser(String uID){
 		for(int i = 0; i < users.size(); i++){
 			if(users.get(i).getUserId().equals(uID)){
