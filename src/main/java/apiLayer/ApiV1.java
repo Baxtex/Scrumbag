@@ -20,13 +20,7 @@ import securityLayer.Security;
  * @author Anton Gustafsson
  *
  */
-public class ApiV1 {
-	
-	private final int STATUSCODE_OK = 200;
-	private final int STATUSCODE_CREATED = 201;
-	private final int STATUSCODE_INVALID = 401;		
-	private final int STATUSCODE_UNAUTHORIZED = 403;	
-	private final int STATUSCODE_DUPLICATE = 409;			
+public class ApiV1 {	
 	
 	private final int OPERATION_LOGIN = 0;
 	private final int OPERATION_LOGOUT = 1;
