@@ -1,5 +1,8 @@
 package dataLayer;
 
+import java.util.Hashtable;
+import java.util.LinkedList;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -10,13 +13,50 @@ import org.codehaus.jettison.json.JSONObject;
  *
  */
 public class DataHandler {
-
+	
+	private int idCounter;
+	
+	public enum Status {	
+		UNPLANNED, NOT_STARTED, STARTED, FOR_TEST,
+		DONE, IMPEDIMENTS
+	}
+	
+	public enum Priority {
+		LOW, MEDIUM, HIGH, UNDEFINED
+	}
+	
+	private LinkedList<Project> projects;
+	private LinkedList<Activity> activities;
+	private LinkedList<Sprint> sprints;
+	private LinkedList<User> users;
+	
+	
+//	private Hashtable<String,String> user_project; //<UserID,ProjectId>
+//	private Hashtable<String,Project>
+//	private 
+	
+	
+	/** Kalles
+	 */
+	
+	
+	public DataHandler(){
+		idCounter = 0;
+		projects = new LinkedList<Project>();
+		activities = new LinkedList<Activity>();
+		sprints = new LinkedList<Sprint>();
+		users = new LinkedList<User>();
+	}
+	
 	public boolean checkProjectId(String id) {
-		if (id.equals("validProjectId")) {
-			return true;
-		} else {
-			return false;
+		Project tmp;
+		for(int i = 0; i < projects.size(); i++){
+			tmp = projects.get(i);
+			if(tmp.getProjectId().equals(id)){
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public boolean checkActivityId(String id) {
@@ -53,8 +93,15 @@ public class DataHandler {
 		// TODO Auto-generated method stub
 	}
 
-	public void getActivities() {
-		// TODO Auto-generated method stub
+	public Activity[] getActivities(String pID) {
+		int arrSize = 0;
+		Activity[] rArr;
+		Activity tmp;
+		
+		for(int i = 0; i < activities.size(); i++){
+			tmp = activities
+		}
+		return (Activity[]) activities.toArray();
 	}
 
 	public void getActivity() {
