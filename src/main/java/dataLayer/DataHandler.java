@@ -93,13 +93,13 @@ public class DataHandler {
 		// TODO Auto-generated method stub
 	}
 
-	public Activity[] getActivities(String pID) {
+	public Activity[] getActivities(String pID) { //Klar
 		int arrSize = 0;
 		int arrIndex = 0;
 		Activity[] rArr;
 		Activity tmp;
 		
-		for(int i = 0; i < activities.size(); i++){
+		for(int i = 0; i < activities.size(); i++) {
 			tmp = activities.get(i);
 			if(tmp.getProjectId().equals(pID)){
 				arrSize++;
@@ -108,7 +108,7 @@ public class DataHandler {
 		
 		rArr = new Activity[arrSize];
 		
-		for(int i = 0; i < activities.size(); i++){
+		for(int i = 0; i < activities.size(); i++) {
 			tmp = activities.get(i);
 			if(tmp.getProjectId().equals(pID)){
 				rArr[arrIndex++] = tmp;
@@ -118,9 +118,9 @@ public class DataHandler {
 		return rArr;
 	}
 
-	public Activity getActivity(String aID) {
+	public Activity getActivity(String aID) { //Klar
 		Activity rActivity = null;
-		for(int i = 0; i < activities.size(); i++){
+		for(int i = 0; i < activities.size(); i++) {
 			if(activities.get(i).getActivityId().equals(aID)){
 				rActivity = activities.get(i);				
 			}
@@ -128,16 +128,32 @@ public class DataHandler {
 		return rActivity;
 	}
 
-	public void createProject() {
-		// TODO Auto-generated method stub
+	public String createProject(String pName) { //Klar
+		Project tmp = new Project((idCounter++)+"",pName);
+		projects.add(tmp);
+		return tmp.getProjectId();
 	}
 
-	public void createSprint() {
-		// TODO Auto-generated method stub
+	public String createSprint(String pID,String title, int index) { //Klar
+		Sprint tmp = new Sprint((idCounter++) + "",pID,title,index);
+		sprints.add(tmp);
+		return tmp.getSprintId();
 	}
-
-	public void addUsers() {
-		// TODO Auto-generated method stub
+	
+	public void addUser(String name) { //Klar
+		users.add(new User((idCounter++)+"",name));
+	}
+	
+	public void addUserToProject(String pID) {
+		
+	}
+	
+	public User[] getUsers() {
+		
+	}
+	
+	public User[] getUsers(String pId){
+		
 	}
 
 	public void removeUsers() {
