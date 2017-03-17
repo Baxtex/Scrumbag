@@ -1,7 +1,9 @@
 package businessLayer;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.codehaus.jettison.json.JSONStringer;
 
 import dataLayer.DataHandler;
 import spark.Response;
@@ -16,27 +18,61 @@ public class Put {
 
 	public JSONObject userManagement(String pID, String action, String userIDs, Response res) {
 		JSONObject jObj = new JSONObject();
+		JSONObject usersIDsObj = new JSONObject(userIDs);
+		JSONArray userIDsArray = usersIDsObj.getJSONArray("user-ids");
+		
 		try {
 			JSONObject jObjUserIDs = new JSONObject(userIDs);
 			if (dataHandler.checkProjectId(pID)) {
-				if (action.equals("add users")) {
-					if (dataHandler.validUsers(jObjUserIDs)) {
-						dataHandler.addUsers();
+				
+				if (action.equals("add users")) {	// Lägga till användare till projekt.
+					int addedUsers = 0;
+					for(int i=0; i<userIDsArray.length(); i++){
+						JSONObject userObject = ((JSONObject)userIDsArray.get(i));
+						String uID = (String) userObject.get("name");
+						if (dataHandler.validateUser(uID)) {
+							dataHandler.addUserToProject(pID, uID);
+							addedUsers++;	
+						}						
+					}
+					if(addedUsers == userIDsArray.length()){	// Då är alla usr tillagda
 						jObj.put("message", "users added");
-						res.status(200);
-					} else {
-						jObj.put("message", "invalid user names");
+						res.status(200);						
+					}else{
+						jObj.put("message", "invalid user names"); // Då är det någon user som inte är giltig.
 						res.status(404);
 					}
-				} else if (action.equals("remove users")) {
-					if (dataHandler.validUsers(jObjUserIDs)) {
-						dataHandler.removeUsers();
+					
+				} else if (action.equals("remove users")) {	// Ta bort användare från projekt
+					int removedUsers = 0;
+					for(int i=0; i<userIDsArray.length(); i++){
+						JSONObject userObject = ((JSONObject)userIDsArray.get(i));
+						String uID = (String) userObject.get("name");
+						if (dataHandler.validateUser(uID)) {
+							dataHandler.removeUserFromProject(pID, uID);
+							removedUsers++;	
+						}						
+					}
+					if(removedUsers == userIDsArray.length()){	// Då är alla usr borttagna från projektet
 						jObj.put("message", "users removed");
-						res.status(200);
-					} else {
-						jObj.put("message", "invalid user names");
+						res.status(200);						
+					}else{
+						jObj.put("message", "invalid user names"); // Då är det någon user som inte är giltig.
 						res.status(404);
 					}
+					
+					
+					
+					
+					
+//					if (dataHandler.validUsers(jObjUserIDs)) {
+//						dataHandler.removeUsers();
+//						jObj.put("message", "users removed");
+//						res.status(200);
+//					} else {
+//						jObj.put("message", "invalid user names");
+//						res.status(404);
+//					}
 				} else {
 					jObj.put("message", "invalid action");
 					res.status(403);
