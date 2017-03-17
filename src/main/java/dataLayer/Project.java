@@ -5,32 +5,23 @@ import java.util.LinkedList;
 
 public class Project {
 	
-	private String projectId;
 	private String elementId;
 	
 	private String name; 
 	
-	private LinkedList<String> users;
+	private LinkedList<User> users;
 	
-	public Project(String projectId, String elementId
-			, String projectName){
-		this
+	public Project(String projectId, String projectName){
+		this.elementId = projectId;
+		this.name = projectName;
 	}
 	
 	public String getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
-
-	public String getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
+	public void setProjectId(String projectId) {
+		this.elementId = projectId;
 	}
 
 	public String getName() {
@@ -41,15 +32,15 @@ public class Project {
 		this.name = name;
 	}
 
-	public LinkedList<String> getUsers() {
+	public LinkedList<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(LinkedList<String> users) {
+	public void setUsers(LinkedList<User> users) {
 		this.users = users;
 	}
 
-	public void addUser(String user){
+	public void addUser(User user){
 		users.add(user);
 	}
 	
