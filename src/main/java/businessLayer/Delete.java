@@ -4,6 +4,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import dataLayer.DataHandler;
+import resource.Status;
 import spark.Response;
 
 /**
@@ -36,9 +37,9 @@ public class Delete {
 
 		if (dataHandler.checkActivityId(activityId)) {
 			dataHandler.deleteActivity(activityId);
-			return createSuccessMessage(OPERATION_DELETE_ACTIVITY, activityId, res);
+			return createSuccessMessage(Status.OPERATION_DELETE_ACTIVITY.getVal(), activityId, res);
 		} else {
-			return createErrorMessage(OPERATION_DELETE_ACTIVITY, activityId, res);
+			return createErrorMessage(Status.OPERATION_DELETE_ACTIVITY.getVal(), activityId, res);
 		}
 	}
 
@@ -57,10 +58,10 @@ public class Delete {
 		res.type("application/json");
 		try {
 			switch (operation) {
-			case OPERATION_DELETE_ACTIVITY: {
+			case 0: { //TODO CHECK THIS WITH KAJSA!
 				json.put("Message", "Successfully removed activity.");
 				json.put("Activity-ID", data);
-				res.status(STATUSCODE_OK);
+				res.status(Status.STATUSCODE_OK.getVal());
 				break;
 			}
 			}
@@ -88,7 +89,7 @@ public class Delete {
 			case OPERATION_DELETE_ACTIVITY: {
 				json.put("Message", "Failed to remove activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
-				res.status(STATUSCODE_NO_RESOURCE);
+				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
 				break;
 			}
 			}

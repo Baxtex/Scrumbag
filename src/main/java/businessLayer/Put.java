@@ -5,6 +5,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import dataLayer.DataHandler;
+import resource.Status;
 import spark.Response;
 
 /**
@@ -46,10 +47,10 @@ public class Put {
 					}
 					if (addedUsers == userIDsArray.length()) {
 						jObj.put("message", "users added");
-						res.status(200);
+						res.status(Status.STATUSCODE_OK.getVal());
 					} else {
 						jObj.put("message", "invalid user names");
-						res.status(404);
+						res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
 					}
 
 				} else if (action.equals("remove users")) {
@@ -64,19 +65,19 @@ public class Put {
 					}
 					if (removedUsers == userIDsArray.length()) {
 						jObj.put("message", "users removed");
-						res.status(200);
+						res.status(Status.STATUSCODE_OK.getVal());
 					} else {
 						jObj.put("message", "invalid user names");
-						res.status(404);
+						res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
 					}
 
 				} else {
 					jObj.put("message", "invalid action");
-					res.status(403);
+					res.status(Status.STATUSCODE_UNAUTHORIZED.getVal());
 				}
 			} else {
 				jObj.put("message", "project-id does not exist");
-				res.status(404);
+				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -93,14 +94,14 @@ public class Put {
 				if (dataHandler.checkActivityId(aID)) {
 					dataHandler.editActivity(aID, title, descr, status, status, expecTime, addTime, sprintID, uID);
 					jObj.put("message", "activity changed");
-					res.status(200);
+					res.status(Status.STATUSCODE_OK.getVal());
 				} else {
 					jObj.put("message", "activity does not exist");
-					res.status(404);
+					res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
 				}
 			} else {
 				jObj.put("message", "project does not exist");
-				res.status(404);
+				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import dataLayer.Activity;
 import dataLayer.DataHandler;
+import resource.Status;
 import spark.Response;
 
 /**
@@ -35,9 +36,10 @@ public class Get {
 
 	public JSONObject getActivities(String projectId, Response res) {
 		if (dataHandler.checkProjectId(projectId)) {
-			return createSuccessMessage(OPERATION_GET_ACTIVITIES, dataHandler.getActivities(projectId), res);
+			return createSuccessMessage(Status.OPERATION_GET_ACTIVITIES.getVal(), dataHandler.getActivities(projectId),
+					res);
 		} else {
-			return createErrorMessage(OPERATION_GET_ACTIVITIES, projectId, res);
+			return createErrorMessage(Status.OPERATION_GET_ACTIVITIES.getVal(), projectId, res);
 		}
 	}
 
@@ -51,9 +53,10 @@ public class Get {
 
 	public JSONObject getActivity(String activityId, Response res) {
 		if (dataHandler.checkActivityId(activityId)) {
-			return createSuccessMessage(OPERATION_GET_ACTIVITY, dataHandler.getActivity(activityId), res);
+			return createSuccessMessage(Status.OPERATION_GET_ACTIVITY.getVal(), dataHandler.getActivity(activityId),
+					res);
 		} else {
-			return createErrorMessage(OPERATION_GET_ACTIVITY, activityId, res);
+			return createErrorMessage(Status.OPERATION_GET_ACTIVITY.getVal(), activityId, res);
 		}
 	}
 
@@ -71,8 +74,8 @@ public class Get {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			switch (operation) {
-			case OPERATION_GET_ACTIVITY: {
+
+			if (Status.OPERATION_GET_ACTIVITY.getVal() == operation) {
 				Activity activity = (Activity) data;
 				json.put("Message", "Successfully returned activity.");
 				json.put("Activity-ID", activity.getActivityId());
@@ -85,9 +88,7 @@ public class Get {
 				json.put("Sprint-id", activity.getSprintId());
 				json.put("User-ID", activity.getRespUser());
 				res.status(STATUSCODE_OK);
-				break;
-			}
-			case OPERATION_GET_ACTIVITIES: {
+			} else if (Status.OPERATION_GET_ACTIVITIES.getVal() == operation) {
 				Activity[] activities = (Activity[]) data;
 				JSONArray jsonArray = new JSONArray();
 				for (Activity activity : activities) {
@@ -99,8 +100,9 @@ public class Get {
 				}
 				json.put("Message", "Successfully returned activites.");
 				json.put("Activities", jsonArray);
+
 			}
-			}
+
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
 		}
