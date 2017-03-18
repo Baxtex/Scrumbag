@@ -1,16 +1,19 @@
 package dataLayer;
 
+/**
+ * This class represents a user with getters and setters.
+ *
+ */
 public class User {
-	
+
 	private String elementId;
 	private String name;
-	
-	public User(String userId, String name){
+
+	public User(String userId, String name) {
 		this.elementId = userId;
 		this.name = name;
 	}
-	
-	
+
 	public String getUserId() {
 		return elementId;
 	}
@@ -26,5 +29,4 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 }

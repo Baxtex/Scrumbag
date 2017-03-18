@@ -3,11 +3,14 @@ package businessLayer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.codehaus.jettison.json.JSONStringer;
 
 import dataLayer.DataHandler;
 import spark.Response;
 
+/**
+ * This module handles put requests.
+ *
+ */
 public class Put {
 
 	private final DataHandler dataHandler;
@@ -18,61 +21,55 @@ public class Put {
 
 	public JSONObject userManagement(String pID, String action, String userIDs, Response res) {
 		JSONObject jObj = new JSONObject();
-		JSONObject usersIDsObj = new JSONObject(userIDs);
-		JSONArray userIDsArray = usersIDsObj.getJSONArray("user-ids");
-		
+		JSONArray userIDsArray = null;
+		JSONObject usersIDsObj;
+		try {
+			usersIDsObj = new JSONObject(userIDs);
+			userIDsArray = usersIDsObj.getJSONArray("user-ids");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
 		try {
 			JSONObject jObjUserIDs = new JSONObject(userIDs);
 			if (dataHandler.checkProjectId(pID)) {
-				
-				if (action.equals("add users")) {	// Lägga till användare till projekt.
+
+				if (action.equals("add users")) {
 					int addedUsers = 0;
-					for(int i=0; i<userIDsArray.length(); i++){
-						JSONObject userObject = ((JSONObject)userIDsArray.get(i));
+					for (int i = 0; i < userIDsArray.length(); i++) {
+						JSONObject userObject = ((JSONObject) userIDsArray.get(i));
 						String uID = (String) userObject.get("name");
 						if (dataHandler.validateUser(uID)) {
 							dataHandler.addUserToProject(pID, uID);
-							addedUsers++;	
-						}						
+							addedUsers++;
+						}
 					}
-					if(addedUsers == userIDsArray.length()){	// Då är alla usr tillagda
+					if (addedUsers == userIDsArray.length()) {
 						jObj.put("message", "users added");
-						res.status(200);						
-					}else{
-						jObj.put("message", "invalid user names"); // Då är det någon user som inte är giltig.
+						res.status(200);
+					} else {
+						jObj.put("message", "invalid user names");
 						res.status(404);
 					}
-					
-				} else if (action.equals("remove users")) {	// Ta bort användare från projekt
+
+				} else if (action.equals("remove users")) {
 					int removedUsers = 0;
-					for(int i=0; i<userIDsArray.length(); i++){
-						JSONObject userObject = ((JSONObject)userIDsArray.get(i));
+					for (int i = 0; i < userIDsArray.length(); i++) {
+						JSONObject userObject = ((JSONObject) userIDsArray.get(i));
 						String uID = (String) userObject.get("name");
 						if (dataHandler.validateUser(uID)) {
 							dataHandler.removeUserFromProject(pID, uID);
-							removedUsers++;	
-						}						
+							removedUsers++;
+						}
 					}
-					if(removedUsers == userIDsArray.length()){	// Då är alla usr borttagna från projektet
+					if (removedUsers == userIDsArray.length()) {
 						jObj.put("message", "users removed");
-						res.status(200);						
-					}else{
-						jObj.put("message", "invalid user names"); // Då är det någon user som inte är giltig.
+						res.status(200);
+					} else {
+						jObj.put("message", "invalid user names");
 						res.status(404);
 					}
-					
-					
-					
-					
-					
-//					if (dataHandler.validUsers(jObjUserIDs)) {
-//						dataHandler.removeUsers();
-//						jObj.put("message", "users removed");
-//						res.status(200);
-//					} else {
-//						jObj.put("message", "invalid user names");
-//						res.status(404);
-//					}
+
 				} else {
 					jObj.put("message", "invalid action");
 					res.status(403);
@@ -94,7 +91,7 @@ public class Put {
 		try {
 			if (dataHandler.checkProjectId(pID)) {
 				if (dataHandler.checkActivityId(aID)) {
-					dataHandler.editActivity();
+					dataHandler.editActivity(aID, title, descr, status, status, expecTime, addTime, sprintID, uID);
 					jObj.put("message", "activity changed");
 					res.status(200);
 				} else {

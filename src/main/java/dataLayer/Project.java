@@ -1,21 +1,21 @@
 package dataLayer;
 
-import java.util.Hashtable;
 import java.util.LinkedList;
 
+/**
+ * Represents a project with getters and setters.
+ *
+ */
 public class Project {
-	
-	private String elementId;
-	
-	private String name; 
-	
+
+	private String elementId, name;
 	private LinkedList<User> users;
-	
-	public Project(String projectId, String projectName){
+
+	public Project(String projectId, String projectName) {
 		this.elementId = projectId;
 		this.name = projectName;
 	}
-	
+
 	public String getProjectId() {
 		return elementId;
 	}
@@ -40,16 +40,15 @@ public class Project {
 		this.users = users;
 	}
 
-	public void addUser(User user){
+	public void addUser(User user) {
 		users.add(user);
 	}
-	
-	public void removeUser(User user){
-		for(int i = 0; i < users.size(); i++){
-			if(users.get(i).equals(user)){
+
+	public void removeUser(User user) {
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).equals(user)) {
 				users.remove(i);
 			}
 		}
 	}
-	
 }

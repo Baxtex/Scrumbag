@@ -5,33 +5,28 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
-
 import businessLayer.Delete;
 import businessLayer.Get;
 import businessLayer.Post;
 import businessLayer.Put;
 import dataLayer.DataHandler;
 import securityLayer.Security;
-import spark.Response;
 
 /**
  * This class is the interface of the rest api. It routes the request and
  * extracts the correct parameters and pass them to the Controller for further
  * processing. Base URI is: http://localhost:4567/
  * 
- * @author Anton Gustafsson
  *
  */
-public class ApiV1 {	
-	
+public class ApiV1 {
+
 	private final int OPERATION_LOGIN = 0;
 	private final int OPERATION_LOGOUT = 1;
 	private final int OPERATION_VALIDATEKEY = 3;
 	private final int OPERATION_AUTHORIZATION = 4;
 	private final int OPERATION_CREATEUSER = 5;
-	
+
 	private final Get get;
 	private final Post post;
 	private final Put put;
@@ -43,14 +38,14 @@ public class ApiV1 {
 	}
 
 	public ApiV1() {
-		
+
 		DataHandler dataHandler = new DataHandler();
 		get = new Get(dataHandler);
 		post = new Post(dataHandler);
 		put = new Put(dataHandler);
 		delete = new Delete(dataHandler);
 		security = new Security();
-		
+
 		setupGetEndpoints();
 		setupPostEndpoints();
 		setupPutEndpoints();
@@ -60,31 +55,31 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for get requests.
 	 */
-	
+
 	private void setupGetEndpoints() {
-		
+
 		// Get activities from a certain project
 
 		get("/activities/:project-id/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
 			String projectId = req.params(":project-id");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				return get.getActivities(projectId, res);
 			}
 		});
-		
+
 		// Get a certain activity
 
 		get("/activity/:activity-id/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
 			String activityId = req.params(":activity-id");
 
-			if(!security.isValidKey(key)) {
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				return get.getActivity(activityId, res);
@@ -95,83 +90,83 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for post requests.
 	 */
-	
+
 	private void setupPostEndpoints() {
-		
+
 		// Login user
 
 		post("/login", (req, res) -> {
-			
+
 			String username = req.queryParams("username");
 			String password = req.queryParams("password");
 			String key = security.login(username, password);
-			
-			if(key == null) {
-				return security.createErrorMsg(OPERATION_LOGIN, username,  res);
+
+			if (key == null) {
+				return security.createErrorMsg(OPERATION_LOGIN, username, res);
 			} else {
 				return security.createSuccessMsg(OPERATION_LOGIN, key, res);
 			}
 		});
-		
+
 		// Logout user
 
 		post("/logout/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
-			
-			if(!security.logout(key)) {
+
+			if (!security.logout(key)) {
 				return security.createErrorMsg(OPERATION_LOGOUT, key, res);
 			} else {
 				return security.createSuccessMsg(OPERATION_LOGOUT, key, res);
 			}
 		});
-		
+
 		// Create a user
 
 		post("/user/:key", (req, res) -> {
-						
+
 			String key = req.params(":key");
 			String username = req.queryParams("username");
 			String password = req.queryParams("password");
 			String authority = req.queryParams("authority");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			}
-			if(!security.hasAdminAuthority(key)) {
+			if (!security.hasAdminAuthority(key)) {
 				return security.createErrorMsg(OPERATION_AUTHORIZATION, key, res);
-			}	
-			if(!security.createUser(username, password, authority)) {
+			}
+			if (!security.createUser(username, password, authority)) {
 				return security.createErrorMsg(OPERATION_CREATEUSER, username, res);
 			} else {
 				return security.createSuccessMsg(OPERATION_CREATEUSER, username, res);
 			}
 		});
-		
+
 		// Create a project
 
 		post("/project/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
 			String projectName = req.queryParams("project-name");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			}
-			if(!security.hasAdminAuthority(key)) {
+			if (!security.hasAdminAuthority(key)) {
 				return security.createErrorMsg(OPERATION_AUTHORIZATION, key, res);
 			} else {
 				return post.createProject(projectName, res);
 			}
 		});
-		
+
 		// Create an activity
-		
+
 		post("/sprint/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
@@ -183,19 +178,18 @@ public class ApiV1 {
 				String respUser = req.queryParams("respUser");
 				String status = req.queryParams("status");
 				String priority = req.queryParams("priority");
-				return post.createActivity(projectId, sprintId, title, description, timeExpected, timeSpent, respUser, status, priority, res);
+				return post.createActivity(projectId, sprintId, title, description, timeExpected, timeSpent, respUser,
+						status, priority, res);
 			}
 		});
-		
 
-		
 		// Create a sprint
 
 		post("/sprint/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
@@ -209,16 +203,16 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for put requests.
 	 */
-	
+
 	private void setupPutEndpoints() {
-		
+
 		// Change a project
 
 		put("/project/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
@@ -227,14 +221,14 @@ public class ApiV1 {
 				return put.userManagement(projectId, action, userIds, res);
 			}
 		});
-		
+
 		// Change an activity
 
 		put("/activity/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String activityId = req.queryParams("activity-id");
@@ -247,8 +241,8 @@ public class ApiV1 {
 				String additionalTime = req.queryParams("additional-time");
 				String sprintId = req.queryParams("sprint-id");
 				String userId = req.queryParams("user-id");
-				return put.editActivity(activityId, projectId, title, description, status,
-								priority, expectedTime, additionalTime, sprintId, userId, res);
+				return put.editActivity(activityId, projectId, title, description, status, priority, expectedTime,
+						additionalTime, sprintId, userId, res);
 			}
 		});
 
@@ -257,16 +251,16 @@ public class ApiV1 {
 	/**
 	 * Initializes routes for delete requests.
 	 */
-	
+
 	private void setupDeleteEndpoints() {
-		
+
 		// Remove an activity
 
 		delete("/activity/:activity-id/:key", (req, res) -> {
-			
+
 			String key = req.params(":key");
-			
-			if(!security.isValidKey(key)) {
+
+			if (!security.isValidKey(key)) {
 				return security.createErrorMsg(OPERATION_VALIDATEKEY, key, res);
 			} else {
 				String activityId = req.params(":activity-id");
