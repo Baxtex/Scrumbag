@@ -1,0 +1,33 @@
+package resource;
+
+/**
+ * Enum used for status codes and operations.
+ * 
+ */
+
+public enum Status {
+	//Status codes
+		 STATUSCODE_OK(200),
+		 STATUSCODE_CREATED(201),
+		 STATUSCODE_INVALID(401),
+		 STATUSCODE_UNAUTHORIZED(403),
+		 STATUSCODE_DUPLICATE(409),
+
+		//Operations
+		 OPERATION_LOGIN(0),
+		 OPERATION_LOGOUT(1),
+		 OPERATION_VALIDATEKEY(3),
+		 OPERATION_AUTHORIZATION(4),
+		 OPERATION_CREATEUSER(5),
+		 AUTHORITY_ADMIN(1);
+	
+	  private final int val;
+
+	  Status(int val) {
+	        this.val = val;
+	    }
+	  
+	  public int getVal() {
+		  return val;
+	  }
+}
