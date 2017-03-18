@@ -251,4 +251,19 @@ public class DataHandler {
 	public boolean isValidPriority(String priority) {
 		return priorities.contains(priority);
 	}
+
+	public Project[] getProjects() {
+
+		int arrIndex = 0;
+		Project[] rArr;
+		Project tmp;
+
+		rArr = new Project[projects.size()];
+
+		for (int i = 0; i < projects.size(); i++) {
+			tmp = projects.get(i);
+			rArr[arrIndex++] = tmp;
+		}
+		return rArr;
+	}
 }

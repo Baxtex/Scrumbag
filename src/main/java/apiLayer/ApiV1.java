@@ -53,6 +53,11 @@ public class ApiV1 {
 
 	private void setupGetEndpoints() {
 
+		// Get all project, their names and id.
+		get("/projects", (req, res) -> {
+			return get.getProjects( res);
+		});
+
 		// Get activities from a certain project
 
 		get("/activities/:project-id/:key", (req, res) -> {
