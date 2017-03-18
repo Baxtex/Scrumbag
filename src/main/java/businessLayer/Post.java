@@ -36,7 +36,7 @@ public class Post {
 
 	public JSONObject createProject(String projectName, Response res) {
 		String projectId = dataHandler.createProject(projectName);
-		return createSuccessMessage(Status.OPERATION_POST_PROJECT.getVal(), projectId, res);
+		return createSuccessMessage(Status.POST_PROJECT.code(), projectId, res);
 	}
 
 	/**
@@ -52,10 +52,10 @@ public class Post {
 
 	public JSONObject createSprint(String projectId, String title, String index, Response res) {
 		if (!dataHandler.checkProjectId(projectId)) {
-			return createErrorMessage(Status.OPERATION_POST_SPRINT.getVal(), title, res);
+			return createErrorMessage(Status.POST_SPRINT.code(), title, res);
 		}
 		String sprintId = dataHandler.createSprint(projectId, title, Integer.parseInt(index));
-		return createSuccessMessage(Status.OPERATION_POST_SPRINT.getVal(), sprintId, res);
+		return createSuccessMessage(Status.POST_SPRINT.code(), sprintId, res);
 	}
 
 	/**
@@ -78,32 +78,32 @@ public class Post {
 	public JSONObject createActivity(String projectId, String sprintId, String title, String description,
 			String timeExpected, String timeSpent, String respUser, String status, String priority, Response res) {
 		if (!dataHandler.checkProjectId(projectId)) {
-			return createErrorMessage(Status.OPERATION_POST_ACTIVITY.getVal(), projectId, res);
+			return createErrorMessage(Status.POST_ACTIVITY.code(), projectId, res);
 		}
 		if (!dataHandler.checkSprint(sprintId)) {
-			return createErrorMessage(Status.OPERATION_POST_ACTIVITY.getVal(), sprintId, res);
+			return createErrorMessage(Status.POST_ACTIVITY.code(), sprintId, res);
 		}
 		String activityId = dataHandler.createActivity(projectId, sprintId, title, description, timeExpected, timeSpent,
 				respUser, status, priority);
-		return createSuccessMessage(Status.OPERATION_POST_ACTIVITY.getVal(), activityId, res);
+		return createSuccessMessage(Status.POST_ACTIVITY.code(), activityId, res);
 	}
 
 	private JSONObject createSuccessMessage(int operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			if (Status.OPERATION_POST_PROJECT.getVal() == operation) {
+			if (Status.POST_PROJECT.code() == operation) {
 				json.put("Message", "Successfully created project.");
 				json.put("Project-ID", data);
-				res.status(Status.STATUSCODE_CREATED.getVal());
-			} else if (Status.OPERATION_POST_SPRINT.getVal() == operation) {
+				res.status(Status.CREATED.code());
+			} else if (Status.POST_SPRINT.code() == operation) {
 				json.put("Message", "Successfully created sprint.");
 				json.put("Sprint-ID", data);
-				res.status(Status.STATUSCODE_CREATED.getVal());
-			} else if (Status.OPERATION_POST_ACTIVITY.getVal() == operation) {
+				res.status(Status.CREATED.code());
+			} else if (Status.POST_ACTIVITY.code() == operation) {
 				json.put("Message", "Successfully created activity.");
 				json.put("Activity-ID", data);
-				res.status(Status.STATUSCODE_CREATED.getVal());
+				res.status(Status.CREATED.code());
 			}
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
@@ -116,14 +116,14 @@ public class Post {
 		res.type("application/json");
 		try {
 
-			if (Status.OPERATION_POST_SPRINT.getVal() == operation) {
+			if (Status.POST_SPRINT.code() == operation) {
 				json.put("Message", "Failed to create sprint. It seems project does not exist.");
 				json.put("Sprint title", data);
-				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
-			} else if (Status.OPERATION_POST_ACTIVITY.getVal() == operation) {
+				res.status(Status.NO_RESOURCE.code());
+			} else if (Status.POST_ACTIVITY.code() == operation) {
 				json.put("Message", "Failed to create activity. It seems some resource does not exist.");
 				json.put("Resource id", data);
-				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+				res.status(Status.NO_RESOURCE.code());
 			}
 
 		} catch (JSONException e) {

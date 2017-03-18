@@ -36,10 +36,10 @@ public class Get {
 
 	public JSONObject getActivities(String projectId, Response res) {
 		if (dataHandler.checkProjectId(projectId)) {
-			return createSuccessMessage(Status.OPERATION_GET_ACTIVITIES.getVal(), dataHandler.getActivities(projectId),
+			return createSuccessMessage(Status.GET_ACTIVITIES.code(), dataHandler.getActivities(projectId),
 					res);
 		} else {
-			return createErrorMessage(Status.OPERATION_GET_ACTIVITIES.getVal(), projectId, res);
+			return createErrorMessage(Status.GET_ACTIVITIES.code(), projectId, res);
 		}
 	}
 
@@ -53,10 +53,10 @@ public class Get {
 
 	public JSONObject getActivity(String activityId, Response res) {
 		if (dataHandler.checkActivityId(activityId)) {
-			return createSuccessMessage(Status.OPERATION_GET_ACTIVITY.getVal(), dataHandler.getActivity(activityId),
+			return createSuccessMessage(Status.GET_ACTIVITY.code(), dataHandler.getActivity(activityId),
 					res);
 		} else {
-			return createErrorMessage(Status.OPERATION_GET_ACTIVITY.getVal(), activityId, res);
+			return createErrorMessage(Status.GET_ACTIVITY.code(), activityId, res);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class Get {
 		res.type("application/json");
 		try {
 
-			if (Status.OPERATION_GET_ACTIVITY.getVal() == operation) {
+			if (Status.GET_ACTIVITY.code() == operation) {
 				Activity activity = (Activity) data;
 				json.put("Message", "Successfully returned activity.");
 				json.put("Activity-ID", activity.getActivityId());
@@ -88,7 +88,7 @@ public class Get {
 				json.put("Sprint-id", activity.getSprintId());
 				json.put("User-ID", activity.getRespUser());
 				res.status(STATUSCODE_OK);
-			} else if (Status.OPERATION_GET_ACTIVITIES.getVal() == operation) {
+			} else if (Status.GET_ACTIVITIES.code() == operation) {
 				Activity[] activities = (Activity[]) data;
 				JSONArray jsonArray = new JSONArray();
 				for (Activity activity : activities) {

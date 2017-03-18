@@ -3,6 +3,7 @@ package securityLayer;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import resource.Status;
 import securityDB.SecurityDBHandler;
 import spark.Response;
 
@@ -207,42 +208,32 @@ public class Security {
 		res.type("application/json");
 
 		try {
-			switch (operation) {
-			case OPERATION_LOGIN: {
+
+			if (Status.LOGIN.code() == operation) {
+
 				json.put("Message", "Failed to log in.");
 				json.put("Username", data);
-				res.status(STATUSCODE_INVALID);
-				break;
-			}
-			case OPERATION_LOGOUT: {
+				res.status(Status.INVALID.code());
+			} else if (Status.LOGOUT.code() == operation) {
 				json.put("Message", "Failed to log out.");
 				json.put("Key", data);
-				res.status(STATUSCODE_INVALID);
-				break;
-			}
-			case OPERATION_VALIDATEKEY: {
+				res.status(Status.INVALID.code());
+			} else if (Status.VALIDATEKEY.code() == operation) {
 				json.put("Message", "Key is invalid.");
 				json.put("Key", data);
-				res.status(STATUSCODE_INVALID);
-				break;
-			}
-			case OPERATION_AUTHORIZATION: {
+				res.status(Status.INVALID.code());
+			} else if (Status.AUTHORIZATION.code() == operation) {
 				json.put("Message", "User is unauthorized to do this.");
 				json.put("Key", data);
-				res.status(STATUSCODE_UNAUTHORIZED);
-				break;
-			}
-			case OPERATION_CREATEUSER: {
+				res.status(Status.UNAUTHORIZED.code());
+			} else if (Status.CREATEUSER.code() == operation) {
 				json.put("Message", "Could not create user. Username is taken.");
 				json.put("Username", data);
-				res.status(STATUSCODE_DUPLICATE);
-				break;
-			}
+				res.status(Status.DUPLICATE.code());
 			}
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
 		}
-
 		return json;
 	}
 
@@ -260,26 +251,20 @@ public class Security {
 		res.type("application/json");
 
 		try {
-			switch (operation) {
-			case OPERATION_LOGIN: {
+			if (Status.LOGIN.code() == operation) {
 				json.put("Message", "Successfully logged in.");
 				json.put("Key", data);
-				res.status(STATUSCODE_CREATED);
-				break;
-			}
-			case OPERATION_LOGOUT: {
+				res.status(Status.CREATED.code());
+			} else if (Status.LOGOUT.code() == operation) {
 				json.put("Message", "Succefully logged out.");
 				json.put("Key", data);
-				res.status(STATUSCODE_OK);
-				break;
-			}
-			case OPERATION_CREATEUSER: {
+				res.status(Status.OK.code());
+			} else if (Status.CREATEUSER.code() == operation) {
 				json.put("Message", "User was successfully created.");
 				json.put("Username", data);
-				res.status(STATUSCODE_CREATED);
-				break;
+				res.status(Status.CREATED.code());
 			}
-			}
+
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
 		}

@@ -37,9 +37,9 @@ public class Delete {
 
 		if (dataHandler.checkActivityId(activityId)) {
 			dataHandler.deleteActivity(activityId);
-			return createSuccessMessage(Status.OPERATION_DELETE_ACTIVITY.getVal(), activityId, res);
+			return createSuccessMessage(Status.DELETE_ACTIVITY.code(), activityId, res);
 		} else {
-			return createErrorMessage(Status.OPERATION_DELETE_ACTIVITY.getVal(), activityId, res);
+			return createErrorMessage(Status.DELETE_ACTIVITY.code(), activityId, res);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class Delete {
 			case 0: { //TODO CHECK THIS WITH KAJSA!
 				json.put("Message", "Successfully removed activity.");
 				json.put("Activity-ID", data);
-				res.status(Status.STATUSCODE_OK.getVal());
+				res.status(Status.OK.code());
 				break;
 			}
 			}
@@ -89,7 +89,7 @@ public class Delete {
 			case OPERATION_DELETE_ACTIVITY: {
 				json.put("Message", "Failed to remove activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
-				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+				res.status(Status.NO_RESOURCE.code());
 				break;
 			}
 			}

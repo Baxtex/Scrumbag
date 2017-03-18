@@ -47,10 +47,10 @@ public class Put {
 					}
 					if (addedUsers == userIDsArray.length()) {
 						jObj.put("message", "users added");
-						res.status(Status.STATUSCODE_OK.getVal());
+						res.status(Status.OK.code());
 					} else {
 						jObj.put("message", "invalid user names");
-						res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+						res.status(Status.NO_RESOURCE.code());
 					}
 
 				} else if (action.equals("remove users")) {
@@ -65,19 +65,19 @@ public class Put {
 					}
 					if (removedUsers == userIDsArray.length()) {
 						jObj.put("message", "users removed");
-						res.status(Status.STATUSCODE_OK.getVal());
+						res.status(Status.OK.code());
 					} else {
 						jObj.put("message", "invalid user names");
-						res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+						res.status(Status.NO_RESOURCE.code());
 					}
 
 				} else {
 					jObj.put("message", "invalid action");
-					res.status(Status.STATUSCODE_UNAUTHORIZED.getVal());
+					res.status(Status.UNAUTHORIZED.code());
 				}
 			} else {
 				jObj.put("message", "project-id does not exist");
-				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+				res.status(Status.NO_RESOURCE.code());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -94,14 +94,14 @@ public class Put {
 				if (dataHandler.checkActivityId(aID)) {
 					dataHandler.editActivity(aID, title, descr, status, status, expecTime, addTime, sprintID, uID);
 					jObj.put("message", "activity changed");
-					res.status(Status.STATUSCODE_OK.getVal());
+					res.status(Status.OK.code());
 				} else {
 					jObj.put("message", "activity does not exist");
-					res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+					res.status(Status.NO_RESOURCE.code());
 				}
 			} else {
 				jObj.put("message", "project does not exist");
-				res.status(Status.STATUSCODE_NO_RESOURCE.getVal());
+				res.status(Status.NO_RESOURCE.code());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

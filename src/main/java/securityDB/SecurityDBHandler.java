@@ -67,7 +67,6 @@ public class SecurityDBHandler {
 
 	public boolean createUser(String username, String password, int authority) {
 		return db.createUser(username, password, authority);
-
 	}
 
 	/**
