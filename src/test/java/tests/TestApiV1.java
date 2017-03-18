@@ -29,10 +29,7 @@ public class TestApiV1 {
 	private final String UNAUTHORIZED_KEY = "vobvuipsj{feVtfsobnfvobvuipsj{feQbttxpse";
 
 	// Test get all projects.
-	
 
-
-	
 	/**
 	 * Setups some basic values
 	 */
@@ -42,11 +39,11 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 		String projectName = "setup project";
-	
+
 		login(username, password);
 		createProject(projectName, key);
 	}
-	
+
 	@Test
 	public void testValidGetAllProjects() {
 		String username = ADMIN_USERNAME;
@@ -334,7 +331,7 @@ public class TestApiV1 {
 		String projectName = "validProjectName";
 		String projectId = "validProjectId";
 		String action = "add users";
-		String[] users = { "user-id1", "user-id2" };
+		String users = "[\"user-id1\", \"user-id2\"]";
 
 		login(username, password);
 		createProject(projectName, key);
@@ -364,7 +361,7 @@ public class TestApiV1 {
 		String projectId = "validProjectId";
 		String action1 = "add users";
 		String action2 = "remove users";
-		String[] users = { "user-id1", "user-id2" };
+		String users = "[\"user-id1\", \"user-id2\"]";
 
 		login(username, password);
 		createProject(projectName, key);
@@ -394,7 +391,7 @@ public class TestApiV1 {
 		String projectName = "validProjectName";
 		String projectId = "0";
 		String action = "add users";
-		String[] users = { "user-id1", "invalid" };
+		String users = "[\"user-id1\", \"invalid\"]";
 
 		login(username, password);
 		createProject(projectName, key);
@@ -420,23 +417,22 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
 		String projectId = "0";
 		String action1 = "add users";
 		String action2 = "remove users";
-		String[] users1 = { "user-id1", "user-id2" };
-		String[] users2 = { "user-id1", "invalid" };
+		String users1 = "[\"user-id1\", \"user-id2\"]";
+		String users2 = "[\"user-id1\", \"inval\"]"; 
+
 
 		login(username, password);
-		createProject(projectName, key);
 		changeProject(projectId, action1, users1, key);
 
-		HttpResponse<JsonNode> response = changeProject(projectId, action2, users2, key);
+		HttpResponse<JsonNode> response = changeProject(projectId, action2, users2, key); 
 
 		String expectedBody = "{\"message\":\"invalid user names\"}";
 		String expectedStatus = "404";
 
-		String resultBody = response.getBody().toString();
+		String resultBody = response.getBody().toString();//TODO This throws Nullpointer, not sure why, JSonarray works on others tests, exactly the same.
 		String resultStatus = String.valueOf(response.getStatus());
 
 		assertEquals(expectedBody, resultBody);
@@ -455,7 +451,7 @@ public class TestApiV1 {
 		String projectName = "validProjectName";
 		String projectId = "0";
 		String action = "invalid";
-		String[] users = { "user-id1", "user-id2" };
+		String users = "[\"user-id1\", \"user-id2\"]";
 
 		login(username, password);
 		createProject(projectName, key);
@@ -484,7 +480,7 @@ public class TestApiV1 {
 		String projectName = "validProjectName";
 		String projectId = "invalid";
 		String action = "add users";
-		String[] users = { "user-id1", "invalid" };
+		String users = "[\"user-id1\", \"invalid\"]";
 
 		login(username, password);
 		createProject(projectName, key);
@@ -513,7 +509,7 @@ public class TestApiV1 {
 		String projectName = "validProjectName";
 		String projectId = "validProjectId";
 		String action = "add users";
-		String[] users = { "user-id1", "invalid" };
+		String users = "[\"user-id1\", \"invalid\"]";
 
 		login(username, password);
 		createProject(projectName, key);
@@ -1044,21 +1040,12 @@ public class TestApiV1 {
 		return response;
 	}
 
-	private HttpResponse<JsonNode> changeProject(String projectId, String action, String[] users, String key) {
-
-		String JSONuserlist = "{";
-		for (int i = 0; i < users.length; i++) {
-			if (i == 0) {
-				JSONuserlist += "\"name\":\"" + users[i] + "\"";
-			}
-			JSONuserlist += ",\"name\":\"" + users[i] + "\"";
-		}
-		JSONuserlist += "}";
-
+	private HttpResponse<JsonNode> changeProject(String projectId, String action, String users, String key) {
 		HttpResponse<JsonNode> response = null;
+		System.out.println("USERS TO STRING: " + users);
 		try {
 			response = Unirest.put("http://localhost:4567/project/" + key).header("accept", "application/json")
-					.field("project-id", projectId).field("action", action).field("user-ids", JSONuserlist).asJson();
+					.field("project-id", projectId).field("action", action).field("user-ids", users).asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}

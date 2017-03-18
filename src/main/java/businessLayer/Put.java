@@ -21,26 +21,22 @@ public class Put {
 	}
 
 	public JSONObject userManagement(String pID, String action, String userIDs, Response res) {
+
 		JSONObject jObj = new JSONObject();
 		JSONArray userIDsArray = null;
-		JSONObject usersIDsObj;
 		try {
-			usersIDsObj = new JSONObject(userIDs);
-			userIDsArray = usersIDsObj.getJSONArray("user-ids");
+			userIDsArray = new JSONArray(userIDs);
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
 		try {
-			JSONObject jObjUserIDs = new JSONObject(userIDs);
 			if (dataHandler.checkProjectId(pID)) {
-
 				if (action.equals("add users")) {
 					int addedUsers = 0;
 					for (int i = 0; i < userIDsArray.length(); i++) {
-						JSONObject userObject = ((JSONObject) userIDsArray.get(i));
-						String uID = (String) userObject.get("name");
-						if (dataHandler.validateUser(uID)) {
-							dataHandler.addUserToProject(pID, uID);
+						String userName = userIDsArray.getString(i);
+						if (dataHandler.validateUser(userName)) {
+							dataHandler.addUserToProject(pID, userName);
 							addedUsers++;
 						}
 					}
