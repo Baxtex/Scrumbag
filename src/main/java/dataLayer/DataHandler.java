@@ -61,10 +61,10 @@ public class DataHandler {
 	}
 
 	public String createActivity(String projectID, String sprintID, String title, String description,
-			String timeExpected, String timeSpent, String respUser, String status, String priority) {
+			String timeExpected, String timeAdded, String respUser, String status, String priority) {
 
 		Activity activity = new Activity((idCounter++) + "", projectID, sprintID, title, description, timeExpected,
-				timeSpent, respUser, status, priority);
+				timeAdded, respUser, status, priority);
 		return activity.getActivityId();
 
 	}
