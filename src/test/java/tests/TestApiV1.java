@@ -40,8 +40,28 @@ public class TestApiV1 {
 		String key = ADMIN_KEY;
 		String projectName = "setup project";
 
+		String projectId = "0";
+		String index = "0";
+		String sprintId = "1";
+		String sprintTitle = "sprint0";
+
+		String title = "short description";
+		String description = "long description";
+		String status = "planned";
+		String priority = "high";
+		String timeExpected = "15:00";
+		String timeSpent = "01:00";
+		String respUser = "user";
+
 		login(username, password);
 		createProject(projectName, key);
+		createSprint(projectId, sprintTitle, index, key);
+
+		createActivity(projectId, sprintId, title, description, timeExpected, timeSpent, respUser, status, priority,
+				key);
+
+		createActivity(projectId, sprintId, title, description, timeExpected, timeSpent, respUser, status, priority,
+				key);
 	}
 
 	@Test
@@ -59,7 +79,7 @@ public class TestApiV1 {
 
 		HttpResponse<JsonNode> response = getAllProjects();
 
-		String expectedBody = "DUNNO";
+		String expectedBody = "All the projects.";
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
@@ -263,7 +283,7 @@ public class TestApiV1 {
 
 		HttpResponse<JsonNode> response = createProject(projectName, key);
 
-		String expectedBody = "{\"Message\":\"Successfully created project.\",\"Project-ID\":\"0\"}";
+		String expectedBody = "{\"Message\":\"Successfully created project.\",\"Project-ID\":\"X\"}";
 		String expectedStatus = "201";
 
 		String resultBody = response.getBody().toString();
@@ -316,9 +336,6 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 
-	// TODO: Maybe some more refactoring of these tests after refactoring
-	// business layer.
-
 	// Change a project - add users
 
 	@Test
@@ -328,13 +345,11 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
-		String projectId = "validProjectId";
+		String projectId = "0";
 		String action = "add users";
-		String users = "[\"user-id1\", \"user-id2\"]";
+		String users = "[\"user-id10\", \"user-id2\"11]";
 
 		login(username, password);
-		createProject(projectName, key);
 
 		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
 
@@ -357,14 +372,12 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
-		String projectId = "validProjectId";
+		String projectId = "0";
 		String action1 = "add users";
 		String action2 = "remove users";
 		String users = "[\"user-id1\", \"user-id2\"]";
 
 		login(username, password);
-		createProject(projectName, key);
 		changeProject(projectId, action1, users, key);
 
 		HttpResponse<JsonNode> response = changeProject(projectId, action2, users, key);
@@ -388,13 +401,11 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
 		String projectId = "0";
 		String action = "add users";
 		String users = "[\"user-id1\", \"invalid\"]";
 
 		login(username, password);
-		createProject(projectName, key);
 
 		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
 
@@ -421,18 +432,22 @@ public class TestApiV1 {
 		String action1 = "add users";
 		String action2 = "remove users";
 		String users1 = "[\"user-id1\", \"user-id2\"]";
-		String users2 = "[\"user-id1\", \"inval\"]"; 
-
+		String users2 = "[\"user-id1\", \"inval\"]";
 
 		login(username, password);
 		changeProject(projectId, action1, users1, key);
 
-		HttpResponse<JsonNode> response = changeProject(projectId, action2, users2, key); 
+		HttpResponse<JsonNode> response = changeProject(projectId, action2, users2, key);
 
 		String expectedBody = "{\"message\":\"invalid user names\"}";
 		String expectedStatus = "404";
 
-		String resultBody = response.getBody().toString();//TODO This throws Nullpointer, not sure why, JSonarray works on others tests, exactly the same.
+		String resultBody = response.getBody().toString();// TODO This throws
+															// Nullpointer, not
+															// sure why,
+															// JSonarray works
+															// on others tests,
+															// exactly the same.
 		String resultStatus = String.valueOf(response.getStatus());
 
 		assertEquals(expectedBody, resultBody);
@@ -454,7 +469,6 @@ public class TestApiV1 {
 		String users = "[\"user-id1\", \"user-id2\"]";
 
 		login(username, password);
-		createProject(projectName, key);
 
 		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
 
@@ -477,13 +491,11 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
 		String projectId = "invalid";
 		String action = "add users";
 		String users = "[\"user-id1\", \"invalid\"]";
 
 		login(username, password);
-		createProject(projectName, key);
 
 		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
 
@@ -506,13 +518,11 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = "invalid";
 
-		String projectName = "validProjectName";
-		String projectId = "validProjectId";
+		String projectId = "0";
 		String action = "add users";
 		String users = "[\"user-id1\", \"invalid\"]";
 
 		login(username, password);
-		createProject(projectName, key);
 
 		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
 
@@ -602,17 +612,15 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
 		String projectId = "0";
-		String title = "sprint1";
+		String title = "sprint2";
 		String index = "1";
 
 		login(username, password);
-		createProject(projectName, key);
 
 		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
 
-		String expectedBody = "{\"Message\":\"Successfully created sprint.\",\"Sprint-ID\":\"1\"}";
+		String expectedBody = "{\"Message\":\"Successfully created sprint.\",\"Sprint-ID\":\"x\"}";
 		String expectedStatus = "201";
 
 		String resultBody = response.getBody().toString();
@@ -689,7 +697,6 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validProjectName";
 		String projectId = "0";
 		String title = "short description";
 		String description = "long description";
@@ -704,13 +711,12 @@ public class TestApiV1 {
 		String index = "1";
 
 		login(username, password);
-		createProject(projectName, key);
 		createSprint(projectId, sprintTitle, index, key);
 
 		HttpResponse<JsonNode> response = createActivity(projectId, sprintId, title, description, timeExpected,
 				timeSpent, respUser, status, priority, key);
 
-		String expectedBody = "{\"Message\":\"Successfully created activity.\",\"Activity-ID\":\"2\"}";
+		String expectedBody = "{\"Message\":\"Successfully created activity.\",\"Activity-ID\":\"X\"}";
 
 		String expectedStatus = "201";
 
@@ -728,7 +734,7 @@ public class TestApiV1 {
 		String username = ADMIN_USERNAME;
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
-		String activityId = "validActivityId";
+		String activityId = "2";
 
 		login(username, password);
 		HttpResponse<JsonNode> response = getActivity(activityId, key);
@@ -800,15 +806,15 @@ public class TestApiV1 {
 		String username = ADMIN_USERNAME;
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
-		String activityId = "validActivityId";
-		String projectId = "validProjectId";
+		String projectId = "0";
+		String sprintId = "1";
+		String activityId = "2";
 		String title = "short description";
 		String description = "long description";
 		String status = "planned";
 		String priority = "high";
 		String expectedTime = "12:00";
 		String additionalTime = "15:00";
-		String sprintId = "validSprintID";
 		String userId = "user";
 
 		login(username, password);
@@ -932,12 +938,12 @@ public class TestApiV1 {
 		String username = ADMIN_USERNAME;
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
-		String activityId = "0";
+		String activityId = "3";
 
 		login(username, password);
 		HttpResponse<JsonNode> response = removeActivity(activityId, key);
 
-		String expectedBody = "{\"Message\":\"Successfully removed activity.\"}";
+		String expectedBody = "{\"Message\":\"Successfully removed activity.\",\"Activity-ID\":\"X\"}";
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
@@ -1042,7 +1048,6 @@ public class TestApiV1 {
 
 	private HttpResponse<JsonNode> changeProject(String projectId, String action, String users, String key) {
 		HttpResponse<JsonNode> response = null;
-		System.out.println("USERS TO STRING: " + users);
 		try {
 			response = Unirest.put("http://localhost:4567/project/" + key).header("accept", "application/json")
 					.field("project-id", projectId).field("action", action).field("user-ids", users).asJson();

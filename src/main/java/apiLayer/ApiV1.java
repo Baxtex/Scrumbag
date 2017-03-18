@@ -75,7 +75,6 @@ public class ApiV1 {
 		// Get a certain activity
 
 		get("/activity/:activity-id/:key", (req, res) -> {
-
 			String key = req.params(":key");
 			String activityId = req.params(":activity-id");
 

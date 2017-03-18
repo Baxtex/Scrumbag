@@ -55,9 +55,7 @@ public class Get {
 
 	public JSONObject getActivity(String activityId, Response res) {
 		if (dataHandler.checkActivityId(activityId)) {
-			return null;
-			// return createSuccessMessage(Status.GET_ACTIVITY,
-			// dataHandler.getActivity(activityId), res); TODO// Needs fix
+			return createSuccessMessage(Status.GET_ACTIVITY, dataHandler.getActivity(activityId), res);
 		} else {
 			return createErrorMessage(Status.GET_ACTIVITY, activityId, res);
 		}

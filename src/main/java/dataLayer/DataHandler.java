@@ -2,6 +2,8 @@ package dataLayer;
 
 import java.util.LinkedList;
 
+import spark.Response;
+
 /**
  * Database handler for the database. As the database in practice is a stub,
  * this class returns hard coded values.
@@ -53,6 +55,7 @@ public class DataHandler {
 	 */
 
 	public boolean checkActivityId(String aID) {
+
 		for (int i = 0; i < activities.size(); i++) {
 			if (activities.get(i).getActivityId().equals(aID)) {
 				return true;
@@ -66,21 +69,23 @@ public class DataHandler {
 
 		Activity activity = new Activity((idCounter++) + "", projectID, sprintID, title, description, timeExpected,
 				timeAdded, respUser, status, priority);
+
+		activities.add(activity);
 		return activity.getActivityId();
 
 	}
 
-	public void editActivity(String activityID, String projectID, String title, String description, String timeExpected,
-			String timeSpent, String respUser, String status, String priority) {
-		Activity a = getActivity(activityID);
-		a.setProjectId(projectID);
+	public void editActivity(String aID, String pID, String title, String descr, String status, String prio,
+			String expecTime, String addTime, String sprintID, String uID, Response res) {
+		Activity a = getActivity(aID);
+		a.setProjectId(pID);
 		a.setTitle(title);
-		a.setDescription(description);
-		a.setTimeExpected(timeExpected);
-		a.setTimeSpent(timeSpent);
-		a.setRespUser(respUser);
+		a.setDescription(descr);
+		a.setTimeExpected(expecTime);
+		a.setTimeSpent(addTime);
+//		a.setRespUser(respUser); //Todo what is this?
 		a.setStatus(status);
-		a.setPriority(priority);
+		a.setPriority(prio);
 
 	}
 
