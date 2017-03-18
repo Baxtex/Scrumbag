@@ -25,8 +25,9 @@ public class Get {
 	public JSONObject getProjects(Response res) {
 
 		return createSuccessMessage(Status.GET_PROJECTS, dataHandler.getProjects(), res);
-		
+
 	}
+
 	/**
 	 * Returns a JSONObject with information about all activities in a certain
 	 * project.
@@ -55,7 +56,8 @@ public class Get {
 	public JSONObject getActivity(String activityId, Response res) {
 		if (dataHandler.checkActivityId(activityId)) {
 			return null;
-			//return createSuccessMessage(Status.GET_ACTIVITY, dataHandler.getActivity(activityId), res); TODO// Needs fix
+			// return createSuccessMessage(Status.GET_ACTIVITY,
+			// dataHandler.getActivity(activityId), res); TODO// Needs fix
 		} else {
 			return createErrorMessage(Status.GET_ACTIVITY, activityId, res);
 		}
@@ -71,13 +73,13 @@ public class Get {
 	 * @return
 	 */
 
-	private JSONObject createSuccessMessage(Status operation, Object[] data, Response res) {
+	private JSONObject createSuccessMessage(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
 
 			if (Status.GET_ACTIVITY == operation) {
-				Activity activity = (Activity) data[0]; //TODO MIGHT NEED FIX
+				Activity activity = (Activity) data; // TODO MIGHT NEED FIX
 				json.put("Message", "Successfully returned activity.");
 				json.put("Activity-ID", activity.getActivityId());
 				json.put("Project-ID", activity.getProjectId());
@@ -101,13 +103,15 @@ public class Get {
 				json.put("Message", "Successfully returned activites.");
 				json.put("Activities", jsonArray);
 
-			}else if(Status.GET_PROJECTS == operation) {
-				Project[] arr = dataHandler.getProjects();
-				
-				for(int i = 0; i<arr.length; i++) {
+			} else if (Status.GET_PROJECTS == operation) {
+				Project[] arr = (Project[]) data;
+				JSONObject innerJson = new JSONObject();
+				for (int i = 0; i < arr.length; i++) {
 					Project tmp = arr[i];
-					json.put("project-name", tmp.getName());
-					json.put("project-id", tmp.getProjectId());	
+					innerJson.put("project-name", tmp.getName());
+					innerJson.put("project-id", tmp.getProjectId());
+					json.append("projekt", innerJson);
+					System.out.println("inside GET");
 				}
 			}
 			res.status(Status.OK.code());

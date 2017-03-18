@@ -263,6 +263,7 @@ public class DataHandler {
 		for (int i = 0; i < projects.size(); i++) {
 			tmp = projects.get(i);
 			rArr[arrIndex++] = tmp;
+			System.out.println("Adding to array!");
 		}
 		return rArr;
 	}

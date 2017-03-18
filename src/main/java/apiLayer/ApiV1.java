@@ -55,7 +55,7 @@ public class ApiV1 {
 
 		// Get all project, their names and id.
 		get("/projects", (req, res) -> {
-			return get.getProjects( res);
+			return get.getProjects(res);
 		});
 
 		// Get activities from a certain project

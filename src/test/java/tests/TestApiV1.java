@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -27,41 +28,44 @@ public class TestApiV1 {
 	private final String UNAUTHORIZED_PASSWORD = "unauthorizedPassword";
 	private final String UNAUTHORIZED_KEY = "vobvuipsj{feVtfsobnfvobvuipsj{feQbttxpse";
 
-	//Test get all projects.
+	// Test get all projects.
 	@Test
-	public void testValidGetAllProjects() {
-		
-		
-		login(ADMIN_USERNAME, ADMIN_PASSWORD);
-		String projectName = "validActivityName";
+	public void testValidGetAllProjects() {		
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
-		createProject(projectName, key);
+
+		String projectName1 = "projekt0";
+		String projectName2 = "projekt1";
 
 		
+		login(username, password);
+		createProject(projectName1, key);
+		createProject(projectName2, key);
+
 		HttpResponse<JsonNode> response = getAllProjects();
-		
+
 		String expectedBody = "DUNNO";
 		String expectedStatus = "200";
-		
+
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-		
+
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
-	
-	
+
 	private HttpResponse<JsonNode> getAllProjects() {
 		HttpResponse<JsonNode> response = null;
 
 		try {
-			response = Unirest.get("http://localhost:4567/projects/").header("accept", "application/json").asJson();
+			response = Unirest.get("http://localhost:4567/projects").header("accept", "application/json").asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}
 		return response;
 	}
-	
+
 	// Login with existing user
 
 	@Test
@@ -256,7 +260,6 @@ public class TestApiV1 {
 
 		HttpResponse<JsonNode> response = createProject(projectName, key);
 
-		
 		String expectedBody = "{\"Message\":\"Successfully created project.\",\"Project-ID\":\"0\"}";
 		String expectedStatus = "201";
 
@@ -675,14 +678,15 @@ public class TestApiV1 {
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
-	//create activity
+
+	// create activity
 	@Test
 	public void testValidCreateActivity1() {
 
 		String username = ADMIN_USERNAME;
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
-		
+
 		String projectName = "validProjectName";
 		String projectId = "0";
 		String title = "short description";
@@ -691,21 +695,18 @@ public class TestApiV1 {
 		String priority = "high";
 		String timeExpected = "15:00";
 		String timeSpent = "01:00";
-		String respUser = "user"; 
-		
+		String respUser = "user";
+
 		String sprintId = "1";
 		String sprintTitle = "sprint1";
 		String index = "1";
 
-
 		login(username, password);
 		createProject(projectName, key);
 		createSprint(projectId, sprintTitle, index, key);
-	
-		
-		HttpResponse<JsonNode> response = createActivity( projectId,  sprintId,  title,  description,
-				 timeExpected,  timeSpent,  respUser,  status,  priority,
-				 key);
+
+		HttpResponse<JsonNode> response = createActivity(projectId, sprintId, title, description, timeExpected,
+				timeSpent, respUser, status, priority, key);
 
 		String expectedBody = "{\"Message\":\"Successfully created activity.\",\"Activity-ID\":\"2\"}";
 
@@ -1079,17 +1080,16 @@ public class TestApiV1 {
 		}
 		return response;
 	}
+
 	private HttpResponse<JsonNode> createActivity(String projectId, String sprintId, String title, String description,
-			String timeExpected, String timeSpent, String respUser, String status, String priority,
-			String key) {
+			String timeExpected, String timeSpent, String respUser, String status, String priority, String key) {
 		HttpResponse<JsonNode> response = null;
 
 		try {
 			response = Unirest.post("http://localhost:4567/activity/" + key).header("accept", "application/json")
-					.field("project-id", projectId).field("title", title)
-					.field("description", description).field("status", status).field("priority", priority)
-					.field("timeExpected", timeExpected).field("timeSpent", timeSpent)
-					.field("sprint-id", sprintId).field("respUser", respUser).asJson();
+					.field("project-id", projectId).field("title", title).field("description", description)
+					.field("status", status).field("priority", priority).field("timeExpected", timeExpected)
+					.field("timeSpent", timeSpent).field("sprint-id", sprintId).field("respUser", respUser).asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}
