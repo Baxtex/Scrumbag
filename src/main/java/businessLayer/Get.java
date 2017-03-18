@@ -15,10 +15,6 @@ import spark.Response;
  */
 public class Get {
 
-	private final int OPERATION_GET_ACTIVITY = 0;
-	private final int OPERATION_GET_ACTIVITIES = 1;
-	private final int STATUSCODE_OK = 200;
-	private final int STATUSCODE_NO_RESOURCE = 404;
 	private final DataHandler dataHandler;
 
 	public Get(DataHandler dataHandler) {
@@ -36,8 +32,7 @@ public class Get {
 
 	public JSONObject getActivities(String projectId, Response res) {
 		if (dataHandler.checkProjectId(projectId)) {
-			return createSuccessMessage(Status.GET_ACTIVITIES.code(), dataHandler.getActivities(projectId),
-					res);
+			return createSuccessMessage(Status.GET_ACTIVITIES.code(), dataHandler.getActivities(projectId), res);
 		} else {
 			return createErrorMessage(Status.GET_ACTIVITIES.code(), projectId, res);
 		}
@@ -53,8 +48,7 @@ public class Get {
 
 	public JSONObject getActivity(String activityId, Response res) {
 		if (dataHandler.checkActivityId(activityId)) {
-			return createSuccessMessage(Status.GET_ACTIVITY.code(), dataHandler.getActivity(activityId),
-					res);
+			return createSuccessMessage(Status.GET_ACTIVITY.code(), dataHandler.getActivity(activityId), res);
 		} else {
 			return createErrorMessage(Status.GET_ACTIVITY.code(), activityId, res);
 		}
@@ -87,7 +81,7 @@ public class Get {
 				json.put("Expected-time", activity.getTimeExpected());
 				json.put("Sprint-id", activity.getSprintId());
 				json.put("User-ID", activity.getRespUser());
-				res.status(STATUSCODE_OK);
+				res.status(Status.OK.code());
 			} else if (Status.GET_ACTIVITIES.code() == operation) {
 				Activity[] activities = (Activity[]) data;
 				JSONArray jsonArray = new JSONArray();
@@ -123,20 +117,17 @@ public class Get {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			switch (operation) {
-			case OPERATION_GET_ACTIVITY: {
+
+			if (Status.GET_ACTIVITY.code() == operation) {
 				json.put("Message", "Failed to return activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
-				res.status(STATUSCODE_NO_RESOURCE);
-				break;
-			}
-			case OPERATION_GET_ACTIVITIES: {
+				res.status(Status.NO_RESOURCE.code());
+			} else if (Status.GET_ACTIVITIES.code() == operation) {
 				json.put("Message", "Failed to return activities. It seems project does not exist.");
 				json.put("Project-ID", data);
-				res.status(STATUSCODE_NO_RESOURCE);
-				break;
+				res.status(Status.NO_RESOURCE.code());
 			}
-			}
+
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
 		}

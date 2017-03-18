@@ -26,7 +26,7 @@ public enum Status {
 		 GET_ACTIVITY(0),
 		 POST_PROJECT(0),
 		 POST_SPRINT(1), 
-		 POST_ACTIVITY(2), OPERATION_DELETE_ACTIVITY(0);
+		 POST_ACTIVITY(2);
 	
 	  private final int val;
 
