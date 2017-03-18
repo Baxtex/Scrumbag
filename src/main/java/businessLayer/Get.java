@@ -111,7 +111,6 @@ public class Get {
 					innerJson.put("project-name", tmp.getName());
 					innerJson.put("project-id", tmp.getProjectId());
 					json.append("projekt", innerJson);
-					System.out.println("inside GET");
 				}
 			}
 			res.status(Status.OK.code());

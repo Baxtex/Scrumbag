@@ -52,7 +52,6 @@ public class Post {
 
 	public JSONObject createSprint(String projectId, String title, String index, Response res) {
 		if (!dataHandler.checkProjectId(projectId)) {
-			System.out.println("HÄR UPPE");
 			return createErrorMessage(Status.POST_SPRINT, title, res);
 		}
 		String sprintId = dataHandler.createSprint(projectId, title, Integer.parseInt(index));
@@ -115,8 +114,7 @@ public class Post {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			System.out.println("Inside create error message!");
-			System.out.println(operation);
+
 			if (Status.POST_SPRINT == operation) {
 				json.put("Message", "Failed to create sprint. It seems project does not exist.");
 				json.put("Sprint title", data);

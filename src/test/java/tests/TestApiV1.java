@@ -29,16 +29,33 @@ public class TestApiV1 {
 	private final String UNAUTHORIZED_KEY = "vobvuipsj{feVtfsobnfvobvuipsj{feQbttxpse";
 
 	// Test get all projects.
+	
+
+
+	
+	/**
+	 * Setups some basic values
+	 */
+	@Before
+	public void setup() {
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = ADMIN_KEY;
+		String projectName = "setup project";
+	
+		login(username, password);
+		createProject(projectName, key);
+	}
+	
 	@Test
-	public void testValidGetAllProjects() {		
+	public void testValidGetAllProjects() {
 		String username = ADMIN_USERNAME;
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName1 = "projekt0";
-		String projectName2 = "projekt1";
+		String projectName1 = "projektX";
+		String projectName2 = "projektY";
 
-		
 		login(username, password);
 		createProject(projectName1, key);
 		createProject(projectName2, key);
@@ -53,17 +70,6 @@ public class TestApiV1 {
 
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
-	}
-
-	private HttpResponse<JsonNode> getAllProjects() {
-		HttpResponse<JsonNode> response = null;
-
-		try {
-			response = Unirest.get("http://localhost:4567/projects").header("accept", "application/json").asJson();
-		} catch (UnirestException e) {
-			e.printStackTrace();
-		}
-		return response;
 	}
 
 	// Login with existing user
@@ -156,7 +162,7 @@ public class TestApiV1 {
 
 		login(ADMIN_USERNAME, ADMIN_PASSWORD);
 
-		String username = "user";
+		String username = "user123";
 		String password = "123";
 		String authority = "0";
 		String key = ADMIN_KEY;
@@ -255,7 +261,7 @@ public class TestApiV1 {
 	public void testValidCreateProject1() {
 		login(ADMIN_USERNAME, ADMIN_PASSWORD);
 
-		String projectName = "validActivityName";
+		String projectName = "validProjectName";
 		String key = ADMIN_KEY;
 
 		HttpResponse<JsonNode> response = createProject(projectName, key);
@@ -277,7 +283,7 @@ public class TestApiV1 {
 
 		login(ADMIN_USERNAME, ADMIN_PASSWORD);
 
-		String projectName = "validActivityName";
+		String projectName = "validProjectName";
 		String key = "invalidKey";
 
 		HttpResponse<JsonNode> response = createProject(projectName, key);
@@ -298,7 +304,7 @@ public class TestApiV1 {
 	public void testInvalidCreateProject2() {
 		login(UNAUTHORIZED_USERNAME, UNAUTHORIZED_PASSWORD);
 
-		String projectName = "validActivityName";
+		String projectName = "validProjectName";
 		String key = UNAUTHORIZED_KEY;
 
 		HttpResponse<JsonNode> response = createProject(projectName, key);
@@ -325,7 +331,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "validProjectId";
 		String action = "add users";
 		String[] users = { "user-id1", "user-id2" };
@@ -354,7 +360,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "validProjectId";
 		String action1 = "add users";
 		String action2 = "remove users";
@@ -385,7 +391,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "0";
 		String action = "add users";
 		String[] users = { "user-id1", "invalid" };
@@ -414,8 +420,8 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validyActivityName";
-		String projectId = "validProjectId";
+		String projectName = "validProjectName";
+		String projectId = "0";
 		String action1 = "add users";
 		String action2 = "remove users";
 		String[] users1 = { "user-id1", "user-id2" };
@@ -446,7 +452,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validActivityName";
+		String projectName = "validProjectName";
 		String projectId = "0";
 		String action = "invalid";
 		String[] users = { "user-id1", "user-id2" };
@@ -475,7 +481,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "invalid";
 		String action = "add users";
 		String[] users = { "user-id1", "invalid" };
@@ -504,7 +510,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = "invalid";
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "validProjectId";
 		String action = "add users";
 		String[] users = { "user-id1", "invalid" };
@@ -630,7 +636,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = "invalid";
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "validProjectId";
 		String title = "sprint1";
 		String index = "1";
@@ -659,7 +665,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 
-		String projectName = "validyActivityName";
+		String projectName = "validProjectName";
 		String projectId = "invalid";
 		String title = "sprint1";
 		String index = "1";
@@ -669,7 +675,7 @@ public class TestApiV1 {
 
 		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
 
-		String expectedBody = "{\"message\":\"project does not exist\"}";
+		String expectedBody = "{\"Sprint title\":\"sprint1\",\"Message\":\"Failed to create sprint. It seems project does not exist.\"}";
 		String expectedStatus = "404";
 
 		String resultBody = response.getBody().toString();
@@ -780,7 +786,7 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = getActivity(activityId, key);
 
-		String expectedBody = "{\"message\":\"activity does not exist\"}";
+		String expectedBody = "{\"Message\":\"Failed to return activity. It seems it does not exist.\",\"Activity-ID\":\"invalidActivityId\"}";
 		String expectedStatus = "404";
 
 		String resultBody = response.getBody().toString();
@@ -865,7 +871,7 @@ public class TestApiV1 {
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
 		String activityId = "invalid";
-		String projectId = "validProjectId";
+		String projectId = "0";
 		String title = "short description";
 		String description = "long description";
 		String status = "planned";
@@ -1119,6 +1125,17 @@ public class TestApiV1 {
 		try {
 			response = Unirest.delete("http://localhost:4567/activity/" + activityId + "/" + key)
 					.header("accept", "application/json").asJson();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	private HttpResponse<JsonNode> getAllProjects() {
+		HttpResponse<JsonNode> response = null;
+
+		try {
+			response = Unirest.get("http://localhost:4567/projects").header("accept", "application/json").asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}
