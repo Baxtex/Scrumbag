@@ -32,9 +32,9 @@ public class Get {
 
 	public JSONObject getActivities(String projectId, Response res) {
 		if (dataHandler.checkProjectId(projectId)) {
-			return createSuccessMessage(Status.GET_ACTIVITIES.code(), dataHandler.getActivities(projectId), res);
+			return createSuccessMessage(Status.GET_ACTIVITIES, dataHandler.getActivities(projectId), res);
 		} else {
-			return createErrorMessage(Status.GET_ACTIVITIES.code(), projectId, res);
+			return createErrorMessage(Status.GET_ACTIVITIES, projectId, res);
 		}
 	}
 
@@ -48,9 +48,9 @@ public class Get {
 
 	public JSONObject getActivity(String activityId, Response res) {
 		if (dataHandler.checkActivityId(activityId)) {
-			return createSuccessMessage(Status.GET_ACTIVITY.code(), dataHandler.getActivity(activityId), res);
+			return createSuccessMessage(Status.GET_ACTIVITY, dataHandler.getActivity(activityId), res);
 		} else {
-			return createErrorMessage(Status.GET_ACTIVITY.code(), activityId, res);
+			return createErrorMessage(Status.GET_ACTIVITY, activityId, res);
 		}
 	}
 
@@ -64,12 +64,12 @@ public class Get {
 	 * @return
 	 */
 
-	private JSONObject createSuccessMessage(int operation, Object data, Response res) {
+	private JSONObject createSuccessMessage(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
 
-			if (Status.GET_ACTIVITY.code() == operation) {
+			if (Status.GET_ACTIVITY == operation) {
 				Activity activity = (Activity) data;
 				json.put("Message", "Successfully returned activity.");
 				json.put("Activity-ID", activity.getActivityId());
@@ -81,8 +81,7 @@ public class Get {
 				json.put("Expected-time", activity.getTimeExpected());
 				json.put("Sprint-id", activity.getSprintId());
 				json.put("User-ID", activity.getRespUser());
-				res.status(Status.OK.code());
-			} else if (Status.GET_ACTIVITIES.code() == operation) {
+			} else if (Status.GET_ACTIVITIES == operation) {
 				Activity[] activities = (Activity[]) data;
 				JSONArray jsonArray = new JSONArray();
 				for (Activity activity : activities) {
@@ -96,6 +95,7 @@ public class Get {
 				json.put("Activities", jsonArray);
 
 			}
+			res.status(Status.OK.code());
 
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
@@ -113,21 +113,21 @@ public class Get {
 	 * @return
 	 */
 
-	private JSONObject createErrorMessage(int operation, Object data, Response res) {
+	private JSONObject createErrorMessage(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
 
-			if (Status.GET_ACTIVITY.code() == operation) {
+			if (Status.GET_ACTIVITY == operation) {
 				json.put("Message", "Failed to return activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
-				res.status(Status.NO_RESOURCE.code());
-			} else if (Status.GET_ACTIVITIES.code() == operation) {
+
+			} else if (Status.GET_ACTIVITIES == operation) {
 				json.put("Message", "Failed to return activities. It seems project does not exist.");
 				json.put("Project-ID", data);
-				res.status(Status.NO_RESOURCE.code());
 			}
 
+			res.status(Status.NO_RESOURCE.code());
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
 		}

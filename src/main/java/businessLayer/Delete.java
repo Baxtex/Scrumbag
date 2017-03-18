@@ -33,9 +33,9 @@ public class Delete {
 
 		if (dataHandler.checkActivityId(activityId)) {
 			dataHandler.deleteActivity(activityId);
-			return createSuccessMessage(Status.DELETE_ACTIVITY.code(), activityId, res);
+			return createSuccessMessage(Status.DELETE_ACTIVITY, activityId, res);
 		} else {
-			return createErrorMessage(Status.DELETE_ACTIVITY.code(), activityId, res);
+			return createErrorMessage(Status.DELETE_ACTIVITY, activityId, res);
 		}
 	}
 
@@ -49,12 +49,11 @@ public class Delete {
 	 * @return
 	 */
 
-	private JSONObject createSuccessMessage(int operation, Object data, Response res) {
+	private JSONObject createSuccessMessage(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-
-			if (Status.DELETE_ACTIVITY.code() == operation) {
+			if (Status.DELETE_ACTIVITY == operation) {
 				json.put("Message", "Successfully removed activity.");
 				json.put("Activity-ID", data);
 				res.status(Status.OK.code());
@@ -75,11 +74,11 @@ public class Delete {
 	 * @return
 	 */
 
-	private JSONObject createErrorMessage(int operation, Object data, Response res) {
+	private JSONObject createErrorMessage(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			if (Status.DELETE_ACTIVITY.code() == operation) {
+			if (Status.DELETE_ACTIVITY == operation) {
 				json.put("Message", "Failed to remove activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
 				res.status(Status.NO_RESOURCE.code());

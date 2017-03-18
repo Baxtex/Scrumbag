@@ -30,7 +30,6 @@ public class Put {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-
 		try {
 			JSONObject jObjUserIDs = new JSONObject(userIDs);
 			if (dataHandler.checkProjectId(pID)) {

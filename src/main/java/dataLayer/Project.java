@@ -14,6 +14,7 @@ public class Project {
 	public Project(String projectId, String projectName) {
 		this.elementId = projectId;
 		this.name = projectName;
+		System.out.println("Project id inside project " + projectId);
 	}
 
 	public String getProjectId() {

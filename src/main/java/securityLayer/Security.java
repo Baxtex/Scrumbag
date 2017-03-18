@@ -190,33 +190,42 @@ public class Security {
 	 * @return
 	 */
 
-	public JSONObject createErrorMsg(int operation, Object data, Response res) {
+	public JSONObject createErrorMsg(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 
 		try {
-
-			if (Status.LOGIN.code() == operation) {
-
+			switch (operation) {
+			case LOGIN: {
 				json.put("Message", "Failed to log in.");
 				json.put("Username", data);
 				res.status(Status.INVALID.code());
-			} else if (Status.LOGOUT.code() == operation) {
+				break;
+			}
+			case LOGOUT: {
 				json.put("Message", "Failed to log out.");
 				json.put("Key", data);
 				res.status(Status.INVALID.code());
-			} else if (Status.VALIDATEKEY.code() == operation) {
+				break;
+			}
+			case VALIDATEKEY: {
 				json.put("Message", "Key is invalid.");
 				json.put("Key", data);
 				res.status(Status.INVALID.code());
-			} else if (Status.AUTHORIZATION.code() == operation) {
+				break;
+			}
+			case AUTHORIZATION: {
 				json.put("Message", "User is unauthorized to do this.");
 				json.put("Key", data);
 				res.status(Status.UNAUTHORIZED.code());
-			} else if (Status.CREATEUSER.code() == operation) {
+				break;
+			}
+			case CREATEUSER: {
 				json.put("Message", "Could not create user. Username is taken.");
 				json.put("Username", data);
 				res.status(Status.DUPLICATE.code());
+				break;
+			}
 			}
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
@@ -233,25 +242,30 @@ public class Security {
 	 * @return
 	 */
 
-	public JSONObject createSuccessMsg(int operation, Object data, Response res) {
+	public JSONObject createSuccessMsg(Status operation, Object data, Response res) {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
-
 		try {
-			if (Status.LOGIN.code() == operation) {
+			switch (operation) {
+			case LOGIN: {
 				json.put("Message", "Successfully logged in.");
 				json.put("Key", data);
 				res.status(Status.CREATED.code());
-			} else if (Status.LOGOUT.code() == operation) {
+				break;
+			}
+			case LOGOUT: {
 				json.put("Message", "Succefully logged out.");
 				json.put("Key", data);
 				res.status(Status.OK.code());
-			} else if (Status.CREATEUSER.code() == operation) {
+				break;
+			}
+			case CREATEUSER: {
 				json.put("Message", "User was successfully created.");
 				json.put("Username", data);
 				res.status(Status.CREATED.code());
+				break;
 			}
-
+			}
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
 		}

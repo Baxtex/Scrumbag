@@ -61,7 +61,7 @@ public class ApiV1 {
 			String projectId = req.params(":project-id");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				return get.getActivities(projectId, res);
 			}
@@ -75,7 +75,7 @@ public class ApiV1 {
 			String activityId = req.params(":activity-id");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				return get.getActivity(activityId, res);
 			}
@@ -97,9 +97,9 @@ public class ApiV1 {
 			String key = security.login(username, password);
 
 			if (key == null) {
-				return security.createErrorMsg(Status.LOGIN.code(), username, res);
+				return security.createErrorMsg(Status.LOGIN, username, res);
 			} else {
-				return security.createSuccessMsg(Status.LOGIN.code(), key, res);
+				return security.createSuccessMsg(Status.LOGIN, key, res);
 			}
 		});
 
@@ -110,9 +110,9 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.logout(key)) {
-				return security.createErrorMsg(Status.LOGOUT.code(), key, res);
+				return security.createErrorMsg(Status.LOGOUT, key, res);
 			} else {
-				return security.createSuccessMsg(Status.LOGOUT.code(), key, res);
+				return security.createSuccessMsg(Status.LOGOUT, key, res);
 			}
 		});
 
@@ -126,15 +126,15 @@ public class ApiV1 {
 			String authority = req.queryParams("authority");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			}
 			if (!security.hasAdminAuthority(key)) {
-				return security.createErrorMsg(Status.AUTHORIZATION.code(), key, res);
+				return security.createErrorMsg(Status.AUTHORIZATION, key, res);
 			}
 			if (!security.createUser(username, password, authority)) {
-				return security.createErrorMsg(Status.CREATEUSER.code(), username, res);
+				return security.createErrorMsg(Status.CREATEUSER, username, res);
 			} else {
-				return security.createSuccessMsg(Status.CREATEUSER.code(), username, res);
+				return security.createSuccessMsg(Status.CREATEUSER, username, res);
 			}
 		});
 
@@ -146,10 +146,10 @@ public class ApiV1 {
 			String projectName = req.queryParams("project-name");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			}
 			if (!security.hasAdminAuthority(key)) {
-				return security.createErrorMsg(Status.AUTHORIZATION.code(), key, res);
+				return security.createErrorMsg(Status.AUTHORIZATION, key, res);
 			} else {
 				return post.createProject(projectName, res);
 			}
@@ -162,7 +162,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
 				String sprintId = req.queryParams("sprint-id");
@@ -185,7 +185,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
 				String sprintTitle = req.queryParams("title");
@@ -208,7 +208,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");
 				String action = req.queryParams("action");
@@ -224,7 +224,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				String activityId = req.queryParams("activity-id");
 				String projectId = req.queryParams("project-id");
@@ -256,7 +256,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {
-				return security.createErrorMsg(Status.VALIDATEKEY.code(), key, res);
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				String activityId = req.params(":activity-id");
 				return delete.deleteActivity(activityId, res);
