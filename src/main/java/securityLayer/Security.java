@@ -15,18 +15,8 @@ import spark.Response;
 
 public class Security {
 
-	private final int STATUSCODE_OK = 200;
-	private final int STATUSCODE_CREATED = 201;
-	private final int STATUSCODE_INVALID = 401;
-	private final int STATUSCODE_UNAUTHORIZED = 403;
-	private final int STATUSCODE_DUPLICATE = 409;
 
-	private final int OPERATION_LOGIN = 0;
-	private final int OPERATION_LOGOUT = 1;
-	private final int OPERATION_VALIDATEKEY = 3;
-	private final int OPERATION_AUTHORIZATION = 4;
-	private final int OPERATION_CREATEUSER = 5;
-	private final int AUTHORITY_ADMIN = 1;
+
 
 	// To generate test keys, this main method will be removed.
 	public static void main(String[] args) {
@@ -110,7 +100,7 @@ public class Security {
 
 	public boolean hasAdminAuthority(String key) {
 		int authority = dbHandler.getAuthority(key);
-		return authority == AUTHORITY_ADMIN;
+		return authority == Status.AUTHORITY_ADMIN.code();
 	}
 
 	/**

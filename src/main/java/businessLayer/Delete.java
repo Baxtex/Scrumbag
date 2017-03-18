@@ -14,10 +14,6 @@ import spark.Response;
 
 public class Delete {
 
-	private final int OPERATION_DELETE_ACTIVITY = 0;
-	private final int STATUSCODE_OK = 200;
-	private final int STATUSCODE_NO_RESOURCE = 404;
-
 	private final DataHandler dataHandler;
 
 	public Delete(DataHandler dataHandler) {
@@ -57,13 +53,11 @@ public class Delete {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			switch (operation) {
-			case 0: { //TODO CHECK THIS WITH KAJSA!
+			
+			if(Status.OPERATION_DELETE_ACTIVITY.code() == operation) {
 				json.put("Message", "Successfully removed activity.");
 				json.put("Activity-ID", data);
 				res.status(Status.OK.code());
-				break;
-			}
 			}
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
@@ -85,13 +79,10 @@ public class Delete {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			switch (operation) {
-			case OPERATION_DELETE_ACTIVITY: {
+			if(Status.OPERATION_DELETE_ACTIVITY.code() == operation) {
 				json.put("Message", "Failed to remove activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
 				res.status(Status.NO_RESOURCE.code());
-				break;
-			}
 			}
 		} catch (JSONException e) {
 			System.out.println("Failed when adding stuff to JSON object.");
