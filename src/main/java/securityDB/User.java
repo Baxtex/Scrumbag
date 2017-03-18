@@ -7,7 +7,6 @@ package securityDB;
 
 public class User {
 	private final String username, password;
-
 	private int authority;
 
 	public User(String username, String password, int authority) {

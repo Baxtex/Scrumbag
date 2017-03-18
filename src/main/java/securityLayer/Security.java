@@ -15,10 +15,7 @@ import spark.Response;
 
 public class Security {
 
-
-
-
-	// To generate test keys, this main method will be removed.
+	// TODO To generate test keys, this main method will be removed.
 	public static void main(String[] args) {
 		Security s = new Security();
 		String keyAdmin = s.generateKey("adminUsername", "adminPassword");

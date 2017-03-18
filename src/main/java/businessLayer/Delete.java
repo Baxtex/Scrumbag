@@ -53,8 +53,8 @@ public class Delete {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			
-			if(Status.DELETE_ACTIVITY.code() == operation) {
+
+			if (Status.DELETE_ACTIVITY.code() == operation) {
 				json.put("Message", "Successfully removed activity.");
 				json.put("Activity-ID", data);
 				res.status(Status.OK.code());
@@ -79,7 +79,7 @@ public class Delete {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-			if(Status.DELETE_ACTIVITY.code() == operation) {
+			if (Status.DELETE_ACTIVITY.code() == operation) {
 				json.put("Message", "Failed to remove activity. It seems it does not exist.");
 				json.put("Activity-ID", data);
 				res.status(Status.NO_RESOURCE.code());

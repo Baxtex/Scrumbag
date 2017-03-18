@@ -3,7 +3,8 @@ package dataLayer;
 import java.util.LinkedList;
 
 /**
- * Database handler for the database. As the database in practice is a stub, this class returns hard coded values.
+ * Database handler for the database. As the database in practice is a stub,
+ * this class returns hard coded values.
  *
  */
 public class DataHandler {

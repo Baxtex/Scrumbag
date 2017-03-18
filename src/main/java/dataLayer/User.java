@@ -6,8 +6,7 @@ package dataLayer;
  */
 public class User {
 
-	private String elementId;
-	private String name;
+	private String elementId, name;
 
 	public User(String userId, String name) {
 		this.elementId = userId;

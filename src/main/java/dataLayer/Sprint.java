@@ -7,7 +7,6 @@ package dataLayer;
 public class Sprint {
 
 	private String sprintId, projectId, title;
-
 	private int index;
 
 	public Sprint(String sprintId, String projectId, String title, int index) {
