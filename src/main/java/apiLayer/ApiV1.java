@@ -157,7 +157,7 @@ public class ApiV1 {
 
 		// Create an activity
 
-		post("/sprint/:key", (req, res) -> {
+		post("/activity/:key", (req, res) -> {
 
 			String key = req.params(":key");
 
@@ -185,6 +185,7 @@ public class ApiV1 {
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {
+
 				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
 			} else {
 				String projectId = req.queryParams("project-id");

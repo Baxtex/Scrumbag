@@ -52,6 +52,7 @@ public class Post {
 
 	public JSONObject createSprint(String projectId, String title, String index, Response res) {
 		if (!dataHandler.checkProjectId(projectId)) {
+			System.out.println("HÄR UPPE");
 			return createErrorMessage(Status.POST_SPRINT, title, res);
 		}
 		String sprintId = dataHandler.createSprint(projectId, title, Integer.parseInt(index));
@@ -77,6 +78,7 @@ public class Post {
 
 	public JSONObject createActivity(String projectId, String sprintId, String title, String description,
 			String timeExpected, String timeSpent, String respUser, String status, String priority, Response res) {
+	
 		if (!dataHandler.checkProjectId(projectId)) {
 			return createErrorMessage(Status.POST_ACTIVITY, projectId, res);
 		}
@@ -113,12 +115,13 @@ public class Post {
 		JSONObject json = new JSONObject();
 		res.type("application/json");
 		try {
-
+			System.out.println("Inside create error message!");
+			System.out.println(operation);
 			if (Status.POST_SPRINT == operation) {
-				json.put("Message", "Failed to SHITcreate sprint. It seems project does not exist.");
+				json.put("Message", "Failed to create sprint. It seems project does not exist.");
 				json.put("Sprint title", data);
 			} else if (Status.POST_ACTIVITY == operation) {
-				json.put("Message", "Failed CRAPto create activity. It seems some resource does not exist.");
+				json.put("Message", "Failed to create activity. It seems some resource does not exist.");
 				json.put("Resource id", data);
 			}
 			res.status(Status.NO_RESOURCE.code());

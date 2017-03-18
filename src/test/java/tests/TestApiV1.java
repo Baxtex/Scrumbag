@@ -571,7 +571,7 @@ public class TestApiV1 {
 
 		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
 
-		String expectedBody = "{\"sprint-id\":\"xxx\"}";
+		String expectedBody = "{\"Message\":\"Successfully created sprint.\",\"Sprint-ID\":\"1\"}";
 		String expectedStatus = "201";
 
 		String resultBody = response.getBody().toString();
@@ -646,30 +646,34 @@ public class TestApiV1 {
 		String username = ADMIN_USERNAME;
 		String password = ADMIN_PASSWORD;
 		String key = ADMIN_KEY;
+		
 		String projectName = "validProjectName";
-		String projectId = "validProjectId";
+		String projectId = "0";
 		String title = "short description";
 		String description = "long description";
 		String status = "planned";
 		String priority = "high";
 		String timeExpected = "15:00";
 		String timeSpent = "01:00";
-		String sprintId = "validSprintID";
-		String respUser = "?????????????????????????????????????????????????????????????????????"; //TODO FIX THIS!
+		String respUser = "user"; 
+		
+		String sprintId = "1";
+		String sprintTitle = "sprint1";
+		String index = "1";
 
 
 		login(username, password);
 		createProject(projectName, key);
+		createSprint(projectId, sprintTitle, index, key);
+	
 		
 		HttpResponse<JsonNode> response = createActivity( projectId,  sprintId,  title,  description,
 				 timeExpected,  timeSpent,  respUser,  status,  priority,
 				 key);
 
-		String expectedBody = "{\"additional-time\":\"xxx\"," + "\"sprint-id\":\"xxx\"," + "\"user-id\":\"xxx\","
-				+ "\"description\":\"xxx\"," + "\"expected-time\":\"xxx\"," + "\"activity-id\":\"xxx\","
-				+ "\"project-id\":\"xxx\"," + "\"title\":\"xxx\"," + "\"priority\":\"xxx\"," + "\"status\":\"xxx\"}";
+		String expectedBody = "{\"Message\":\"Successfully created activity.\",\"Activity-ID\":\"2\"}";
 
-		String expectedStatus = "200";
+		String expectedStatus = "201";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
@@ -1045,10 +1049,10 @@ public class TestApiV1 {
 		HttpResponse<JsonNode> response = null;
 
 		try {
-			response = Unirest.put("http://localhost:4567/activity/" + key).header("accept", "application/json")
+			response = Unirest.post("http://localhost:4567/activity/" + key).header("accept", "application/json")
 					.field("project-id", projectId).field("title", title)
 					.field("description", description).field("status", status).field("priority", priority)
-					.field("expected-time", timeExpected).field("timeSpent", timeSpent)
+					.field("timeExpected", timeExpected).field("timeSpent", timeSpent)
 					.field("sprint-id", sprintId).field("respUser", respUser).asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
