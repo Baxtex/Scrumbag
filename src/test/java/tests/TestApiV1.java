@@ -643,10 +643,11 @@ public class TestApiV1 {
 		login(username, password);
 
 		HttpResponse<JsonNode> response = createSprint(projectId, title, index, key);
+		String sprintId = response.getBody().getObject().getString("Sprint-ID");
 
-		String expectedBody = "{\"Message\":\"Successfully created sprint.\",\"Sprint-ID\":\"x\"}";
+		String expectedBody = "{\"Message\":\"Successfully created sprint.\",\"Sprint-ID\":\"" + sprintId + "\"}";
 		String expectedStatus = "201";
-
+		
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
 
@@ -714,6 +715,7 @@ public class TestApiV1 {
 	}
 
 	// create activity
+	
 	@Test
 	public void testValidCreateActivity1() {
 
@@ -739,9 +741,10 @@ public class TestApiV1 {
 
 		HttpResponse<JsonNode> response = createActivity(projectId, sprintId, title, description, timeExpected,
 				timeSpent, respUser, status, priority, key);
+		
+		String activityId = response.getBody().getObject().getString("Activity-ID");
 
-		String expectedBody = "{\"Message\":\"Successfully created activity.\",\"Activity-ID\":\"X\"}";
-
+		String expectedBody = "{\"Message\":\"Successfully created activity.\",\"Activity-ID\":\"" + activityId + "\"}";
 		String expectedStatus = "201";
 
 		String resultBody = response.getBody().toString();
