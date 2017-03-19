@@ -40,6 +40,18 @@ public class SecurityDB {
 	protected User getUser(String username) {
 		return users.get(username);
 	}
+	
+	/**
+	 * Returns the password to a certain user, null if there is none.
+	 */
+	
+	protected String getPassword(String username) {
+		User user = users.get(username);
+		if (user != null) {
+			return user.getPassword();
+		}
+		return null;
+	}
 
 	/**
 	 * Returns the authority of the session matching the key, -1 if there is

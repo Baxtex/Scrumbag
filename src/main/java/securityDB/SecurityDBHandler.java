@@ -36,6 +36,14 @@ public class SecurityDBHandler {
 		}
 		return false;
 	}
+	
+	/**
+	 * Returns the password of a certain user
+	 */
+	
+	public String getPassword(String username) {
+		return db.getPassword(username);
+	}
 
 	/**
 	 * Returns the authority of a certain key, -1 if key is invalid.
