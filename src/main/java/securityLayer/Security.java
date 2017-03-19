@@ -40,8 +40,9 @@ public class Security {
 
 	public String login(String username, String password) {
 		if (isValidUser(username, password)) {
-			return createSession(username, password);
-
+			if (password.equals(dbHandler.getPassword(username))) {
+				return createSession(username, password);
+			}
 		}
 		return null;
 	}
