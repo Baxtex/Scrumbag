@@ -347,7 +347,7 @@ public class TestApiV1 {
 
 		String projectId = "0";
 		String action = "add users";
-		String users = "[\"user-id10\", \"user-id2\"11]";
+		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
 
 		login(username, password);
 
@@ -375,7 +375,7 @@ public class TestApiV1 {
 		String projectId = "0";
 		String action1 = "add users";
 		String action2 = "remove users";
-		String users = "[\"user-id1\", \"user-id2\"]";
+		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
 
 		login(username, password);
 		changeProject(projectId, action1, users, key);
@@ -403,7 +403,7 @@ public class TestApiV1 {
 
 		String projectId = "0";
 		String action = "add users";
-		String users = "[\"user-id1\", \"invalid\"]";
+		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"invalid\"}]";
 
 		login(username, password);
 
@@ -431,8 +431,8 @@ public class TestApiV1 {
 		String projectId = "0";
 		String action1 = "add users";
 		String action2 = "remove users";
-		String users1 = "[\"user-id1\", \"user-id2\"]";
-		String users2 = "[\"user-id1\", \"inval\"]";
+		String users1 = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
+		String users2 = "[{\"name\" : \"userName1\"}, {\"name\" : \"inval\"}]";
 
 		login(username, password);
 		changeProject(projectId, action1, users1, key);
@@ -466,7 +466,7 @@ public class TestApiV1 {
 		String projectName = "validProjectName";
 		String projectId = "0";
 		String action = "invalid";
-		String users = "[\"user-id1\", \"user-id2\"]";
+		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
 
 		login(username, password);
 
@@ -493,7 +493,7 @@ public class TestApiV1 {
 
 		String projectId = "invalid";
 		String action = "add users";
-		String users = "[\"user-id1\", \"invalid\"]";
+		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"inval\"}]";
 
 		login(username, password);
 
@@ -520,7 +520,7 @@ public class TestApiV1 {
 
 		String projectId = "0";
 		String action = "add users";
-		String users = "[\"user-id1\", \"invalid\"]";
+		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"inval\"}]";
 
 		login(username, password);
 
