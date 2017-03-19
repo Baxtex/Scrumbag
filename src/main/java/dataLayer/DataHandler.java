@@ -56,7 +56,10 @@ public class DataHandler {
 
 	public boolean checkActivityId(String aID) {
 
+		System.out.println("checking activity IDs..");
+		
 		for (int i = 0; i < activities.size(); i++) {
+			System.out.println("name " + activities.get(i).getActivityId());
 			if (activities.get(i).getActivityId().equals(aID)) {
 				return true;
 			}
@@ -83,7 +86,6 @@ public class DataHandler {
 		a.setDescription(descr);
 		a.setTimeExpected(expecTime);
 		a.setTimeSpent(addTime);
-//		a.setRespUser(respUser); //Todo what is this?
 		a.setStatus(status);
 		a.setPriority(prio);
 

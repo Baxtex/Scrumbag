@@ -739,9 +739,7 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = getActivity(activityId, key);
 
-		String expectedBody = "{\"additional-time\":\"xxx\"," + "\"sprint-id\":\"xxx\"," + "\"user-id\":\"xxx\","
-				+ "\"description\":\"xxx\"," + "\"expected-time\":\"xxx\"," + "\"activity-id\":\"xxx\","
-				+ "\"project-id\":\"xxx\"," + "\"title\":\"xxx\"," + "\"priority\":\"xxx\"," + "\"status\":\"xxx\"}";
+		String expectedBody = "{\"sprint-id\":\"1\",\"user-id\":\"user\",\"description\":\"long description\",\"expected-time\":\"12:0\",\"activity-id\":\"2\",\"message\":\"Successfully returned activity.\",\"title\":\"short description\",\"project-id\":\"0\",\"priority\":\"high\",\"status\":\"planned\"}";
 
 		String expectedStatus = "200";
 
@@ -943,7 +941,7 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = removeActivity(activityId, key);
 
-		String expectedBody = "{\"Message\":\"Successfully removed activity.\",\"Activity-ID\":\"X\"}";
+		String expectedBody = "{\"Message\":\"Successfully removed activity.\",\"Activity-ID\":\"3\"}";
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();

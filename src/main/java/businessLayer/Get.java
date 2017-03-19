@@ -77,25 +77,25 @@ public class Get {
 		try {
 
 			if (Status.GET_ACTIVITY == operation) {
-				Activity activity = (Activity) data; // TODO MIGHT NEED FIX
-				json.put("Message", "Successfully returned activity.");
-				json.put("Activity-ID", activity.getActivityId());
-				json.put("Project-ID", activity.getProjectId());
-				json.put("Title", activity.getTitle());
-				json.put("Description", activity.getDescription());
-				json.put("Status", activity.getStatus());
-				json.put("Priority", activity.getPriority());
-				json.put("Expected-time", activity.getTimeExpected());
-				json.put("Sprint-id", activity.getSprintId());
-				json.put("User-ID", activity.getRespUser());
+				Activity activity = (Activity) data; 
+				json.put("message", "Successfully returned activity.");
+				json.put("sprint-id", activity.getSprintId());
+				json.put("user-id", activity.getRespUser());
+				json.put("description", activity.getDescription());
+				json.put("expected-time", activity.getTimeExpected());
+				json.put("title", activity.getTitle());
+				json.put("activity-id", activity.getActivityId());
+				json.put("project-id", activity.getProjectId());
+				json.put("priority", activity.getPriority());
+				json.put("status", activity.getStatus());
 			} else if (Status.GET_ACTIVITIES == operation) {
 				Activity[] activities = (Activity[]) data;
 				JSONArray jsonArray = new JSONArray();
 				for (Activity activity : activities) {
 					JSONObject jsonActivity = new JSONObject();
-					jsonActivity.put("Activity-ID", activity.getActivityId());
-					jsonActivity.put("Title", activity.getTitle());
-					jsonActivity.put("Status", activity.getStatus());
+					jsonActivity.put("activity-id", activity.getActivityId());
+					jsonActivity.put("title", activity.getTitle());
+					jsonActivity.put("status", activity.getStatus());
 					jsonArray.put(jsonActivity);
 				}
 				json.put("Message", "Successfully returned activites.");

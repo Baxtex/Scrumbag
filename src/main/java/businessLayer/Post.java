@@ -77,7 +77,7 @@ public class Post {
 
 	public JSONObject createActivity(String projectId, String sprintId, String title, String description,
 			String timeExpected, String timeSpent, String respUser, String status, String priority, Response res) {
-	
+
 		if (!dataHandler.checkProjectId(projectId)) {
 			return createErrorMessage(Status.POST_ACTIVITY, projectId, res);
 		}

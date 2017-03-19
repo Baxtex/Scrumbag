@@ -83,14 +83,12 @@ public class Put {
 
 	public JSONObject editActivity(String aID, String pID, String title, String descr, String status, String prio,
 			String expecTime, String addTime, String sprintID, String uID, Response res) {
-		
-		System.out.println("Start of editActivity");
 		JSONObject jObj = new JSONObject();
 		try {
 			if (dataHandler.checkProjectId(pID)) {
 				if (dataHandler.checkActivityId(aID)) {
-					dataHandler.editActivity(  aID,  pID,  title,  descr,  status,  prio,
-							 expecTime,  addTime,  sprintID,  uID,  res);
+					dataHandler.editActivity(aID, pID, title, descr, status, prio, expecTime, addTime, sprintID, uID,
+							res);
 					jObj.put("message", "activity changed");
 					res.status(Status.OK.code());
 				} else {
