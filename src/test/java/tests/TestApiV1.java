@@ -93,8 +93,6 @@ public class TestApiV1 {
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-		System.out.println(resultBody);
-		System.out.println(expectedBody);
 
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
