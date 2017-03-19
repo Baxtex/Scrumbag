@@ -233,7 +233,7 @@ public class ApiV1 {
 			} else {
 				String activityId = req.queryParams("activity-id");
 				String projectId = req.queryParams("project-id");
-				String title = req.queryParams("activity-id");
+				String title = req.queryParams("title");
 				String description = req.queryParams("description");
 				String status = req.queryParams("status");
 				String priority = req.queryParams("priority");
