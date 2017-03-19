@@ -59,7 +59,6 @@ public class DataHandler {
 		System.out.println("checking activity IDs..");
 		
 		for (int i = 0; i < activities.size(); i++) {
-			System.out.println("name " + activities.get(i).getActivityId());
 			if (activities.get(i).getActivityId().equals(aID)) {
 				return true;
 			}
@@ -72,7 +71,7 @@ public class DataHandler {
 
 		Activity activity = new Activity((idCounter++) + "", projectID, sprintID, title, description, timeExpected,
 				timeAdded, respUser, status, priority);
-
+		
 		activities.add(activity);
 		return activity.getActivityId();
 
@@ -200,6 +199,7 @@ public class DataHandler {
 		users.add(tmp);
 		return tmp.getUserId();
 	}
+
 
 	public void addUserToProject(String pID, String uID) {
 		Project p = getProject(pID);

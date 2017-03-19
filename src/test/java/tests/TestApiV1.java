@@ -77,7 +77,7 @@ public class TestApiV1 {
 		createProject(projectName1, key);
 		createProject(projectName2, key);
 
-		HttpResponse<JsonNode> response = getAllProjects();
+		HttpResponse<JsonNode> response = getAllProjects(key);
 
 		String expectedBody = "All the projects.";
 		String expectedStatus = "200";
@@ -89,6 +89,30 @@ public class TestApiV1 {
 		assertEquals(expectedStatus, resultStatus);
 	}
 
+	@Test
+	public void testInvalidGetAllProjects() {
+		String username = ADMIN_USERNAME;
+		String password = ADMIN_PASSWORD;
+		String key = "invalid";
+		
+		String projectName1 = "projektX";
+		String projectName2 = "projektY";
+		
+		login(username, password);
+		createProject(projectName1, key);
+		createProject(projectName2, key);
+		
+		HttpResponse<JsonNode> response = getAllProjects(key);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"invalid\"}";
+		String expectedStatus = "401";
+		
+		String resultBody = response.getBody().toString();
+		String resultStatus = String.valueOf(response.getStatus());
+		
+		assertEquals(expectedBody, resultBody);
+		assertEquals(expectedStatus, resultStatus);
+	}
 	// Login with existing user
 
 	@Test
@@ -739,15 +763,15 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = getActivity(activityId, key);
 
-		String expectedBody = "{\"sprint-id\":\"1\",\"user-id\":\"user\",\"description\":\"long description\",\"expected-time\":\"12:0\",\"activity-id\":\"2\",\"message\":\"Successfully returned activity.\",\"title\":\"short description\",\"project-id\":\"0\",\"priority\":\"high\",\"status\":\"planned\"}";
+		String expectedBody = "{\"sprint-id\":\"1\",\"user-id\":\"user\",\"description\":\"long description\",\"expected-time\":\"15:0\",\"activity-id\":\"2\",\"message\":\"Successfully returned activity.\",\"title\":\"short description\",\"project-id\":\"0\",\"priority\":\"high\",\"status\":\"planned\"}";
 
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
-		assertEquals(expectedStatus, resultStatus);
+ 		assertEquals(expectedStatus, resultStatus);
 	}
 
 	// Get activity - with invalid key
@@ -806,12 +830,12 @@ public class TestApiV1 {
 		String key = ADMIN_KEY;
 		String projectId = "0";
 		String sprintId = "1";
-		String activityId = "2";
+		String activityId = "3";
 		String title = "short description";
 		String description = "long description";
 		String status = "planned";
 		String priority = "high";
-		String expectedTime = "12:00";
+		String expectedTime = "10:00";
 		String additionalTime = "15:00";
 		String userId = "user";
 
@@ -1121,11 +1145,11 @@ public class TestApiV1 {
 		return response;
 	}
 
-	private HttpResponse<JsonNode> getAllProjects() {
+	private HttpResponse<JsonNode> getAllProjects(String key) {
 		HttpResponse<JsonNode> response = null;
 
 		try {
-			response = Unirest.get("http://localhost:4567/projects").header("accept", "application/json").asJson();
+			response = Unirest.get("http://localhost:4567/projects/" + key).header("accept", "application/json").asJson();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}

@@ -54,8 +54,13 @@ public class ApiV1 {
 	private void setupGetEndpoints() {
 
 		// Get all project, their names and id.
-		get("/projects", (req, res) -> {
-			return get.getProjects(res);
+		get("/projects/:key", (req, res) -> {
+			String key = req.params(":key");
+			if (!security.isValidKey(key)) {
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
+			} else {
+				return get.getProjects(res);
+			}
 		});
 
 		// Get activities from a certain project
@@ -135,11 +140,14 @@ public class ApiV1 {
 			if (!security.hasAdminAuthority(key)) {
 				return security.createErrorMsg(Status.AUTHORIZATION, key, res);
 			}
+			
+	
 			if (!security.createUser(username, password, authority)) {
-				return security.createErrorMsg(Status.CREATEUSER, username, res);
-			} else {
-				return security.createSuccessMsg(Status.CREATEUSER, username, res);
-			}
+				if(!post.createUser(username, password, authority)) {//TODO Create user in dataLayer aswell
+					return security.createErrorMsg(Status.CREATEUSER, username, res);					
+				}
+			} 
+			return security.createSuccessMsg(Status.CREATEUSER, username, res);
 		});
 
 		// Create a project
