@@ -21,7 +21,8 @@ public class Put {
 	}
 
 	public JSONObject userManagement(String pID, String action, String userIDs, Response res) {
-
+		int counter = 0;
+		System.out.println(userIDs);
 		JSONObject jObj = new JSONObject();
 		JSONArray userIDsArray = null;
 		try {
@@ -34,13 +35,18 @@ public class Put {
 				if (action.equals("add users")) {
 					int addedUsers = 0;
 					for (int i = 0; i < userIDsArray.length(); i++) {
-						String userName = userIDsArray.getString(i);
+						JSONObject tmp = userIDsArray.getJSONObject(i);
+						String userName = tmp.getString("name");
+						counter++;
+						System.out.println(userName);
 						if (dataHandler.validateUser(userName)) {
 							dataHandler.addUserToProject(pID, userName);
 							addedUsers++;
 						}
 					}
-					if (addedUsers == userIDsArray.length()) {
+					
+					System.out.println("addedUsrs " + addedUsers + "counter " + counter);
+					if (addedUsers == counter) {
 						jObj.put("message", "users added");
 						res.status(Status.OK.code());
 					} else {
@@ -83,6 +89,7 @@ public class Put {
 
 	public JSONObject editActivity(String aID, String pID, String title, String descr, String status, String prio,
 			String expecTime, String addTime, String sprintID, String uID, Response res) {
+	
 		JSONObject jObj = new JSONObject();
 		try {
 			if (dataHandler.checkProjectId(pID)) {
