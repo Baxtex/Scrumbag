@@ -19,73 +19,55 @@ public class Put {
 	public Put(DataHandler dataHandler) {
 		this.dataHandler = dataHandler;
 	}
-
-	public JSONObject userManagement(String pID, String action, String userIDs, Response res) {
-		int counter = 0;
-		System.out.println(userIDs);
-		JSONObject jObj = new JSONObject();
-		JSONArray userIDsArray = null;
-		try {
-			userIDsArray = new JSONArray(userIDs);
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			if (dataHandler.checkProjectId(pID)) {
-				if (action.equals("add users")) {
-					int addedUsers = 0;
-					for (int i = 0; i < userIDsArray.length(); i++) {
-						JSONObject tmp = userIDsArray.getJSONObject(i);
-						String userName = tmp.getString("name");
-						counter++;
-						System.out.println(userName);
-						if (dataHandler.validateUser(userName)) {
-							dataHandler.addUserToProject(pID, userName);
-							addedUsers++;
-						}
-					}
-					
-					System.out.println("addedUsrs " + addedUsers + "counter " + counter);
-					if (addedUsers == counter) {
-						jObj.put("message", "users added");
-						res.status(Status.OK.code());
-					} else {
-						jObj.put("message", "invalid user names");
-						res.status(Status.NO_RESOURCE.code());
-					}
-
-				} else if (action.equals("remove users")) {
-					int removedUsers = 0;
-					for (int i = 0; i < userIDsArray.length(); i++) {
-						JSONObject userObject = ((JSONObject) userIDsArray.get(i));
-						String uID = (String) userObject.get("name");
-						if (dataHandler.validateUser(uID)) {
-							dataHandler.removeUserFromProject(pID, uID);
-							removedUsers++;
-						}
-					}
-					if (removedUsers == userIDsArray.length()) {
-						jObj.put("message", "users removed");
-						res.status(Status.OK.code());
-					} else {
-						jObj.put("message", "invalid user names");
-						res.status(Status.NO_RESOURCE.code());
-					}
-
-				} else {
-					jObj.put("message", "invalid action");
-					res.status(Status.UNAUTHORIZED.code());
-				}
-			} else {
-				jObj.put("message", "project-id does not exist");
+	
+	public JSONObject userManagement(String projectId, String action, String usernames, Response res) {
+		JSONObject json = new JSONObject();
+		
+		try {	
+			
+			if(!dataHandler.checkProjectId(projectId)) {
+				json.put("Message", "Failed to add users. Project does not exist.");
 				res.status(Status.NO_RESOURCE.code());
+				return json;
+			}
+			if(!action.equals("add users") && !action.equals("remove users")) {
+				json.put("Message", "Failed to do anything. Action is invalid.");
+				res.status(Status.UNAUTHORIZED.code());
+				return json;
+			}	
+			JSONArray usersJSONArray = new JSONArray(usernames);
+			for(int i = 0; i < usersJSONArray.length(); i++) {
+				String username = usersJSONArray.getJSONObject(i).getString("name");
+				if(!dataHandler.isValidUser(username)) {
+					json.put("Message", "Failed to do anything. One or more users are invalid.");
+					res.status(Status.UNAUTHORIZED.code());
+					return json;
+				}
+			}
+			if(action.equals("add users")) {
+				for(int i = 0; i < usersJSONArray.length(); i++) {
+					String username = usersJSONArray.getJSONObject(i).getString("name");
+					dataHandler.addUserToProject(projectId, username);
+				}
+				json.put("Message", "Successfully added all users to project.");
+				res.status(Status.OK.code()); 
+				return json;
+			} 
+			if(action.equals("remove users")) {
+				for(int i = 0; i < usersJSONArray.length(); i++) {
+					String username = usersJSONArray.getJSONObject(i).getString("name");
+					dataHandler.removeUserFromProject(projectId, username);
+				}
+				json.put("Message", "Successfully removed all users from project.");
+				res.status(Status.OK.code());
+				return json;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		res.type("application/json");
-		return jObj;
+		return null;
 	}
+
 
 	public JSONObject editActivity(String aID, String pID, String title, String descr, String status, String prio,
 			String expecTime, String addTime, String sprintID, String uID, Response res) {

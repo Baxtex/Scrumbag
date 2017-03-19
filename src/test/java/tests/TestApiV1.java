@@ -64,27 +64,36 @@ public class TestApiV1 {
 				key);
 	}
 
+	// TODO: Returns a list of SOOO many projects, why?
+	
 	@Test
 	public void testValidGetAllProjects() {
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
+		
+		String projectTitle1 = "project1";
+		String projectTitle2 = "project2";
+		
+		// Administration logs in and creates two projects
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		
+		HttpResponse<JsonNode> projectResponse1 = createProject(projectTitle1, ADMIN_KEY);
+		HttpResponse<JsonNode> projectResponse2 = createProject(projectTitle2, ADMIN_KEY);
+		
+		String projectId1 = projectResponse1.getBody().getObject().getString("Project-ID");
+		String projectId2 = projectResponse2.getBody().getObject().getString("Project-ID");
+		
+		// And calls for a list of all the projects
+		
+		HttpResponse<JsonNode> response = getAllProjects(ADMIN_KEY);
 
-		String projectName1 = "projektX";
-		String projectName2 = "projektY";
-
-		login(username, password);
-		createProject(projectName1, key);
-		createProject(projectName2, key);
-
-		HttpResponse<JsonNode> response = getAllProjects(key);
-
-		String expectedBody = "All the projects.";
+		String expectedBody = "{\"projekt\":[{\"project-name\":" + projectTitle1 + "\",\"project-id\":\"" + projectId1 + "\"},"
+					+ "{\"project-name\":\"" + projectTitle2 + "\",\"project-id\":\"" + projectId2 + "\"}]}";
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		System.out.println(resultBody);
+		System.out.println(expectedBody);
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -306,13 +315,14 @@ public class TestApiV1 {
 		String key = ADMIN_KEY;
 
 		HttpResponse<JsonNode> response = createProject(projectName, key);
+		String projectId = response.getBody().getObject().getString("Project-ID");
 
-		String expectedBody = "{\"Message\":\"Successfully created project.\",\"Project-ID\":\"X\"}";
+		String expectedBody = "{\"Message\":\"Successfully created project.\",\"Project-ID\":\"" + projectId + "\"}";
 		String expectedStatus = "201";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -364,25 +374,33 @@ public class TestApiV1 {
 
 	@Test
 	public void testValidAddUserManagementAndActionAndProjectName1() {
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String user2 = "user2";
+		String password2 = "password2";
+		String prio2 = "0";
+		String projectTitle = "project";
 
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
-
-		String projectId = "0";
-		String action = "add users";
-		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
-
-		login(username, password);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
-
-		String expectedBody = "{\"message\":\"users added\"}";
+		// Administration logs in and creates two users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		createUser(user2, password2, prio2, ADMIN_KEY);
+		
+		// Administration creates a project
+		HttpResponse<JsonNode> projectResponse = createProject(projectTitle, ADMIN_KEY);
+		String projectId = projectResponse.getBody().getObject().getString("Project-ID");
+		
+		// Administration adds users to the project
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + user2 + "\"}]";
+		HttpResponse<JsonNode> response = changeProject(projectId, "add users", users, ADMIN_KEY);
+		
+		String expectedBody = "{\"Message\":\"Successfully added all users to project.\"}";
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -391,27 +409,36 @@ public class TestApiV1 {
 
 	@Test
 	public void testValidRemoveUserManagementAndActionAndProjectName1() {
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String user2 = "user2";
+		String password2 = "password2";
+		String prio2 = "0";
+		String projectTitle = "project";
 
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
+		// Administration logs in and creates two users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		createUser(user2, password2, prio2, ADMIN_KEY);
+		
+		// Administration creates a project
+		HttpResponse<JsonNode> projectResponse = createProject(projectTitle, ADMIN_KEY);
+		String projectId = projectResponse.getBody().getObject().getString("Project-ID");
+		
+		// Administration adds users to the project
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + user2 + "\"}]";
+		changeProject(projectId, "add users", users, ADMIN_KEY);
 
-		String projectId = "0";
-		String action1 = "add users";
-		String action2 = "remove users";
-		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
-
-		login(username, password);
-		changeProject(projectId, action1, users, key);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action2, users, key);
-
-		String expectedBody = "{\"message\":\"users removed\"}";
+		// Administration removes users from the project
+		HttpResponse<JsonNode> response = changeProject(projectId, "remove users", users, ADMIN_KEY);
+		
+		String expectedBody = "{\"Message\":\"Successfully removed all users from project.\"}";
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -420,25 +447,30 @@ public class TestApiV1 {
 
 	@Test
 	public void testInvalidAddUserManagement1() {
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String userInvalid = "invalid";
+		String projectTitle = "project";
 
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
-
-		String projectId = "0";
-		String action = "add users";
-		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"invalid\"}]";
-
-		login(username, password);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
-
-		String expectedBody = "{\"message\":\"invalid user names\"}";
-		String expectedStatus = "404";
+		// Administration logs in and creates only one users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		
+		// Administration creates a project
+		HttpResponse<JsonNode> projectResponse = createProject(projectTitle, ADMIN_KEY);
+		String projectId = projectResponse.getBody().getObject().getString("Project-ID");
+		
+		// Administration add one valid user and one invalid user to project
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + userInvalid + "\"}]";
+		HttpResponse<JsonNode> response = changeProject(projectId, "add users", users, ADMIN_KEY);
+		
+		String expectedBody = "{\"Message\":\"Failed to do anything. One or more users are invalid.\"}";
+		String expectedStatus = "403";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -447,33 +479,38 @@ public class TestApiV1 {
 
 	@Test
 	public void testInvalidRemoveUserManagement1() {
-
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
-
-		String projectId = "0";
-		String action1 = "add users";
-		String action2 = "remove users";
-		String users1 = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
-		String users2 = "[{\"name\" : \"userName1\"}, {\"name\" : \"inval\"}]";
-
-		login(username, password);
-		changeProject(projectId, action1, users1, key);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action2, users2, key);
-
-		String expectedBody = "{\"message\":\"invalid user names\"}";
-		String expectedStatus = "404";
-
-		String resultBody = response.getBody().toString();// TODO This throws
-															// Nullpointer, not
-															// sure why,
-															// JSonarray works
-															// on others tests,
-															// exactly the same.
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String user2 = "user2";
+		String password2 = "password2";
+		String prio2 = "0";
+		String userInvalid = "invalid";
+		String projectTitle = "project";
+	
+		// Administration logs in and creates two users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		createUser(user2, password2, prio2, ADMIN_KEY);
+		
+		// Administration creates a project
+		HttpResponse<JsonNode> projectResponse = createProject(projectTitle, ADMIN_KEY);
+		String projectId = projectResponse.getBody().getObject().getString("Project-ID");
+		
+		// Administration adds two users to project
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + user2 + "\"}]";
+		changeProject(projectId, "add users", users, ADMIN_KEY);
+		
+		// Administration removes one valid user and one invalid user.
+		users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + userInvalid + "\"}]";
+		HttpResponse<JsonNode> response = changeProject(projectId, "remove users", users, ADMIN_KEY);
+		
+		String expectedBody = "{\"Message\":\"Failed to do anything. One or more users are invalid.\"}";
+		String expectedStatus = "403";
+	
+		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -482,26 +519,33 @@ public class TestApiV1 {
 
 	@Test
 	public void testInvalidAction1() {
-
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
-
-		String projectName = "validProjectName";
-		String projectId = "0";
-		String action = "invalid";
-		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"userName2\"}]";
-
-		login(username, password);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
-
-		String expectedBody = "{\"message\":\"invalid action\"}";
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String user2 = "user2";
+		String password2 = "password2";
+		String prio2 = "0";
+		String projectTitle = "project";
+	
+		// Administration logs in and creates two users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		createUser(user2, password2, prio2, ADMIN_KEY);
+		
+		// Administration creates a project
+		HttpResponse<JsonNode> projectResponse = createProject(projectTitle, ADMIN_KEY);
+		String projectId = projectResponse.getBody().getObject().getString("Project-ID");
+		
+		// Administration tries to do action that does not exist
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + user2 + "\"}]";
+		HttpResponse<JsonNode> response = changeProject(projectId, "hug users", users, ADMIN_KEY);
+		
+		String expectedBody = "{\"Message\":\"Failed to do anything. Action is invalid.\"}";
 		String expectedStatus = "403";
-
+	
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -510,25 +554,29 @@ public class TestApiV1 {
 
 	@Test
 	public void testInvalidProjectID1() {
-
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = ADMIN_KEY;
-
-		String projectId = "invalid";
-		String action = "add users";
-		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"inval\"}]";
-
-		login(username, password);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
-
-		String expectedBody = "{\"message\":\"project-id does not exist\"}";
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String user2 = "user2";
+		String password2 = "password2";
+		String prio2 = "0";
+		String projectId = "00";
+	
+		// Administration logs in and creates two users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		createUser(user2, password2, prio2, ADMIN_KEY);
+		
+		// Administration tries to add users to none existing project
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + user2 + "\"}]";
+		HttpResponse<JsonNode> response = changeProject(projectId, "add users", users, ADMIN_KEY);
+		
+		String expectedBody = "{\"Message\":\"Failed to add users. Project does not exist.\"}";
 		String expectedStatus = "404";
-
+	
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
@@ -537,28 +585,47 @@ public class TestApiV1 {
 
 	@Test
 	public void testInvalidKey1() {
+		String user1 = "user1";
+		String password1 = "password1";
+		String prio1 = "0";
+		String user2 = "user2";
+		String password2 = "password2";
+		String prio2 = "0";
+		String projectTitle = "project";
+		String invalidKey = "invalid";
 
-		String username = ADMIN_USERNAME;
-		String password = ADMIN_PASSWORD;
-		String key = "invalid";
-
-		String projectId = "0";
-		String action = "add users";
-		String users = "[{\"name\" : \"userName1\"}, {\"name\" : \"inval\"}]";
-
-		login(username, password);
-
-		HttpResponse<JsonNode> response = changeProject(projectId, action, users, key);
-
-		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + key + "\"}";
+		// Administration logs in and creates two users
+		login(ADMIN_USERNAME, ADMIN_PASSWORD);
+		createUser(user1, password1, prio1, ADMIN_KEY);
+		createUser(user2, password2, prio2, ADMIN_KEY);
+		
+		// Administration creates a project
+		HttpResponse<JsonNode> projectResponse = createProject(projectTitle, ADMIN_KEY);
+		String projectId = projectResponse.getBody().getObject().getString("Project-ID");
+		
+		// Administration adds users to the project
+		String users = "[{\"name\":\"" + user1 + "\"},{\"name\":\"" + user2 + "\"}]";
+		HttpResponse<JsonNode> response = changeProject(projectId, "add users", users, invalidKey);
+		
+		String expectedBody = "{\"Message\":\"Key is invalid.\",\"Key\":\"" + invalidKey + "\"}";
 		String expectedStatus = "401";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
 		assertEquals(expectedStatus, resultStatus);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// TODO: Get activities need to be implemented correct. Supposed to return a
 	// JSONArray with activities.

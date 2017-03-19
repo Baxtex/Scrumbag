@@ -9,11 +9,12 @@ import java.util.LinkedList;
 public class Project {
 
 	private String elementId, name;
-	private LinkedList<User> users;
+	private LinkedList<String> users;
 
 	public Project(String projectId, String projectName) {
 		this.elementId = projectId;
 		this.name = projectName;
+		this.users = new LinkedList<String>();
 	}
 
 	public String getProjectId() {
@@ -32,23 +33,19 @@ public class Project {
 		this.name = name;
 	}
 
-	public LinkedList<User> getUsers() {
+	public LinkedList<String> getUsers() {
 		return users;
 	}
 
-	public void setUsers(LinkedList<User> users) {
+	public void setUsers(LinkedList<String> users) {
 		this.users = users;
 	}
 
-	public void addUser(User user) {
+	public void addUser(String user) {
 		users.add(user);
 	}
 
-	public void removeUser(User user) {
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).equals(user)) {
-				users.remove(i);
-			}
-		}
+	public void removeUser(String user) {
+		users.remove(user);
 	}
 }

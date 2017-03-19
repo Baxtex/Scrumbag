@@ -130,7 +130,7 @@ public class Post {
 	}
 
 	//TODO Create user in dataLayer aswell
-	public boolean createUser(String userName, String password, String authority) {
+	public boolean createUser(String userName) {
 		dataHandler.createUser(userName);
 		return true;
 	}

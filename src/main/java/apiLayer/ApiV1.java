@@ -141,12 +141,10 @@ public class ApiV1 {
 				return security.createErrorMsg(Status.AUTHORIZATION, key, res);
 			}
 			
-	
 			if (!security.createUser(username, password, authority)) {
-				if(!post.createUser(username, password, authority)) {//TODO Create user in dataLayer aswell
-					return security.createErrorMsg(Status.CREATEUSER, username, res);					
-				}
+				return security.createErrorMsg(Status.CREATEUSER, username, res);			
 			} 
+			post.createUser(username);
 			return security.createSuccessMsg(Status.CREATEUSER, username, res);
 		});
 
@@ -217,7 +215,7 @@ public class ApiV1 {
 		// Change a project
 
 		put("/project/:key", (req, res) -> {
-
+			
 			String key = req.params(":key");
 
 			if (!security.isValidKey(key)) {

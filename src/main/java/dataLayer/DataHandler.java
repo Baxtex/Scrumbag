@@ -16,7 +16,7 @@ public class DataHandler {
 	private LinkedList<Project> projects;
 	private LinkedList<Activity> activities;
 	private LinkedList<Sprint> sprints;
-	private LinkedList<User> users;
+	private LinkedList<String> users;
 	private LinkedList<String> statuses;
 	private LinkedList<String> priorities;
 
@@ -55,8 +55,6 @@ public class DataHandler {
 	 */
 
 	public boolean checkActivityId(String aID) {
-
-		System.out.println("checking activity IDs..");
 		
 		for (int i = 0; i < activities.size(); i++) {
 			if (activities.get(i).getActivityId().equals(aID)) {
@@ -194,32 +192,22 @@ public class DataHandler {
 	/**
 	 * User Methods
 	 */
-	public String createUser(String name) {
-		User tmp = new User((idCounter++) + "", name);
-		users.add(tmp);
-		return tmp.getUserId();
+	public void createUser(String username) {
+		users.add(username);
+	}
+	
+	public boolean isValidUser(String username) {
+		return users.contains(username);
 	}
 
-
-	public void addUserToProject(String pID, String uID) {
+	public void addUserToProject(String pID, String username) {
 		Project p = getProject(pID);
-		User u = getUser(uID);
-		p.addUser(u);
+		p.addUser(username);
 	}
 
-	public void removeUserFromProject(String pID, String uID) {
-		Project p = getProject(pID);
-		User u = getUser(uID);
-		p.removeUser(u);
-	}
-
-	public boolean validateUser(String uID) {
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).getUserId().equals(uID)) {
-				return true;
-			}
-		}
-		return false;
+	public void removeUserFromProject(String pID, String username) {
+		Project p = getProject(pID); 
+		p.removeUser(username);
 	}
 
 	public User[] getUsers() {
@@ -231,24 +219,8 @@ public class DataHandler {
 		return (User[]) p.getUsers().toArray();
 	}
 
-	private User getUser(String uID) {
-		User tmp = null;
-		for (int i = 0; i < users.size(); i++) {
-			tmp = users.get(i);
-			if (tmp.getUserId().equals(uID)) {
-				break;
-			}
-		}
-		return tmp;
-	}
-
-	public boolean removeUser(String uID) {
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).getUserId().equals(uID)) {
-				return true;
-			}
-		}
-		return false;
+	public void removeUser(String username) {
+		users.remove(username);
 	}
 
 	public boolean isValidStatus(String status) {
