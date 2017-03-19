@@ -128,4 +128,10 @@ public class Post {
 		}
 		return json;
 	}
+
+	//TODO Create user in dataLayer aswell
+	public boolean createUser(String userName, String password, String authority) {
+		dataHandler.createUser(userName);
+		return true;
+	}
 }
