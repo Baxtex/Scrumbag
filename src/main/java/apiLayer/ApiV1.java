@@ -54,8 +54,13 @@ public class ApiV1 {
 	private void setupGetEndpoints() {
 
 		// Get all project, their names and id.
-		get("/projects", (req, res) -> {
-			return get.getProjects(res);
+		get("/projects/:key", (req, res) -> {
+			String key = req.params(":key");
+			if (!security.isValidKey(key)) {
+				return security.createErrorMsg(Status.VALIDATEKEY, key, res);
+			} else {
+				return get.getProjects(res);
+			}
 		});
 
 		// Get activities from a certain project
