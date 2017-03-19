@@ -739,15 +739,15 @@ public class TestApiV1 {
 		login(username, password);
 		HttpResponse<JsonNode> response = getActivity(activityId, key);
 
-		String expectedBody = "{\"sprint-id\":\"1\",\"user-id\":\"user\",\"description\":\"long description\",\"expected-time\":\"12:0\",\"activity-id\":\"2\",\"message\":\"Successfully returned activity.\",\"title\":\"short description\",\"project-id\":\"0\",\"priority\":\"high\",\"status\":\"planned\"}";
+		String expectedBody = "{\"sprint-id\":\"1\",\"user-id\":\"user\",\"description\":\"long description\",\"expected-time\":\"15:0\",\"activity-id\":\"2\",\"message\":\"Successfully returned activity.\",\"title\":\"short description\",\"project-id\":\"0\",\"priority\":\"high\",\"status\":\"planned\"}";
 
 		String expectedStatus = "200";
 
 		String resultBody = response.getBody().toString();
 		String resultStatus = String.valueOf(response.getStatus());
-
+		
 		assertEquals(expectedBody, resultBody);
-		assertEquals(expectedStatus, resultStatus);
+ 		assertEquals(expectedStatus, resultStatus);
 	}
 
 	// Get activity - with invalid key
@@ -806,12 +806,12 @@ public class TestApiV1 {
 		String key = ADMIN_KEY;
 		String projectId = "0";
 		String sprintId = "1";
-		String activityId = "2";
+		String activityId = "3";
 		String title = "short description";
 		String description = "long description";
 		String status = "planned";
 		String priority = "high";
-		String expectedTime = "12:00";
+		String expectedTime = "10:00";
 		String additionalTime = "15:00";
 		String userId = "user";
 
