@@ -1,5 +1,5 @@
 # Scrumbag
-Repository for the API comoponent for Scrumbag
+Repository for the API component for Scrumbag
 
 This is a repo designed to hold the API component for scrumbag in the course Systemutveckling II.
 
